@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base", "Base\Base.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{366F9CB2-8336-402D-9ACA-5AB0E6476D43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{793D90A1-73BF-47CF-BBFC-7D4744910D59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{793D90A1-73BF-47CF-BBFC-7D4744910D59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

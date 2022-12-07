@@ -6,13 +6,13 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/schoolclasses")]
-    public class StudentsController : ControllerBase
+    public class SchoolClassController : ControllerBase
     {
         private IConfiguration Config { get; }
         private IUnitOfWork UnitOfWork { get; }
         //private readonly ILogger<StudentsController> _logger;
 
-        public StudentsController(IConfiguration config, IUnitOfWork unitOfWork) : base()//ILogger<StudentsController> logger)
+        public SchoolClassController(IConfiguration config, IUnitOfWork unitOfWork) : base()//ILogger<StudentsController> logger)
         {
             //_logger = logger;
             UnitOfWork = unitOfWork;

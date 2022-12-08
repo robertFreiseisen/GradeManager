@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Contracts.Entities
+namespace Shared.Entities
 {
     public class Grade : EntityObject 
     {
@@ -36,6 +36,6 @@ namespace Core.Contracts.Entities
         [Required]
         public Teacher? Teacher { get; set; }
 
-        public string Kind { get; set; }
+        public string? Kind { get; set; } // Test oder MAK, Hausuebung
     }
 }

@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  grades_db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: GradeeDb
+    
+  grades_backend:
+    container_name: grades_backend
+    image: grades_backend
+    ports:
+      - 5000:80
+    build: 
+      context: .
+      dockerfile: ./API/Dockerfile
+    depends_on:
+      - grades_db
+
+  grades_web:
+    container_name: grades_web
+    ports: 
+      - 8080:80
+    build: 
+       context: .
+       dockerfile: ./Client/Dockerfile
+    depends_on: 
+      - grades_backend
+
+
+
+      
+      

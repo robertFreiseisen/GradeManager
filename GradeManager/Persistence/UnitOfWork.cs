@@ -10,17 +10,24 @@ namespace Persistence
     {
         public ApplicationDbContext DbContext { get; }
 
-        public ISchoolClassRepository SchoolClassRepository => throw new NotImplementedException();
+        public ISchoolClassRepository SchoolClassRepository { get; }
 
-        public IGradeRepository GradeRepository => throw new NotImplementedException();
+        public IGradeRepository GradeRepository { get; }
 
-        public IStudentRepository StudentRepository => throw new NotImplementedException();
-
-        public ISubjectRepository SubjectRepository => throw new NotImplementedException();
+        public IStudentRepository StudentRepository { get; }
+        public ISubjectRepository SubjectRepository { get; }
+        public IGradeKeyRepository GradeKeyRepository { get; }
+        public IGradeKindRepository GradeKindRepository { get; }
 
         public UnitOfWork()
         {
             DbContext = new ApplicationDbContext();
+            SchoolClassRepository = new SchoolClassRepository(DbContext);
+            GradeRepository = new GradeRepository(DbContext);
+            StudentRepository= new StudentRepository(DbContext);
+            SubjectRepository = new SubjectRepository(DbContext);
+            GradeKeyRepository = new GradeKeyRepository(DbContext);
+            GradeKindRepository= new GradeKindRepository(DbContext);
 
         }
 

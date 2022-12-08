@@ -1,7 +1,6 @@
 ﻿using Core.Contracts;
-using Core.Contracts.Entities;
-using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Entities;
 
 namespace API.Controllers
 {
@@ -20,27 +19,61 @@ namespace API.Controllers
             Config = config;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<GradeGetDto>>> GetAllGradesAsync()
+        public async Task<ActionResult<IEnumerable<Grade>>> GetAllGradesAsync()
         {
             var grades = await UnitOfWork.GradeRepository.GetAllAsync();
 
-            var dtos = grades
-                .Select(g => new GradeGetDto(g.Id, g.Graduate, g.SubjectId, g.TeacherId, g.StudentId, g.Note));
-            
-            return Ok(dtos);
+            return Ok(grades);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<GradeKeyGetDto>> AddKeyAsync()
+        [HttpGet("/keys")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<GradeKey>>> GetAllGradeKeyAsync()
         {
+            var grades = await UnitOfWork.GradeKeyRepository.GetAllAsync();
 
+            return Ok(grades);
+        }
+
+
+        [HttpPost("/keys")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GradeKey>> AddKeyAsync(GradeKey gradeKeyPostDto)
+        {
+            if (gradeKeyPostDto == null)
+            {
+                return BadRequest("PostDto required!");
+            }
+
+            var keyToAdd =
+                new GradeKey
+                {
+                    TeacherId = gradeKeyPostDto.TeacherId,
+                    Name = gradeKeyPostDto.Name,
+                    ScriptType = gradeKeyPostDto.ScriptType,
+                    Calculation = gradeKeyPostDto.Calculation
+                };
+
+            try
+            {
+                await UnitOfWork.GradeRepository.AddGradeKeyAsync(keyToAdd);
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return NoContent();
         }
     }
-
-    public record GradeGetDto(int Id, int Graduate, int SubjectId, int TeacherId, int StudentId, string Note);
-    public record GradeKeyGetDto(int Id, int ScriptType, string Script, int SubjectId);
-    public record GradeKeyPostDto(int ScriptType, string Script);
 }

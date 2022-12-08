@@ -1,13 +1,20 @@
 ﻿using System.Reflection;
 
 using Base.Helper;
-
 using Microsoft.EntityFrameworkCore;
+using Shared.Entities;
 
 namespace Persistence
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<GradeKey> GradeKeys => Set<GradeKey>();
+        public DbSet<Grade> Grades => Set<Grade>();
+        public DbSet<Teacher> Teachers => Set<Teacher>();
+        public DbSet<Subject> Subjects => Set<Subject>();
+        public DbSet<Student> Students => Set<Student>();      
+        public DbSet<SchoolClass> SchoolClasses => Set<SchoolClass>();
+        public DbSet<GradeKind> GradeKinds => Set<GradeKind>();
         public ApplicationDbContext()
         {
         }
@@ -31,8 +38,8 @@ namespace Persistence
             {
                 var configuration = ConfigurationHelper.GetConfiguration();
 
-                string connectionString = configuration["ConnectionStrings:DefaultConnection"];
-
+                string connectionString = configuration["ConnectionStrings:DockerConnection"];
+                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 optionsBuilder.UseNpgsql(connectionString);
                 //optionsBuilder.UseLoggerFactory(GetLoggerFactory());
 

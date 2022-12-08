@@ -1,6 +1,6 @@
 using Core.Contracts;
-using Core.Contracts.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Entities;
 
 namespace API.Controllers
 {

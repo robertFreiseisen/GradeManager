@@ -1,9 +1,22 @@
 ﻿@page "/script"
+@page "/script/{type:string}"
 
-<PageTitle>ScriptInput</PageTitle>
-<textarea id="scriptInput" style="resize: none"  name="script" rows="40" cols="100">
-</textarea>
+<textarea id="scriptInput" style="resize: none" @bin="@script"  name="script" rows="40" cols="100"/>
+
+
+@if(Type == null)
+{
+    <PageTitle>New Key in</PageTitle>
+    // ToDo: select for ScriptTypes
+}
+else
+{
+    <PageTitle> Edit @Type Script </PageTitle>
+}
 
 @code {
+    [Parameter]
+    public string? Type { get; set; }
+    string script = "" ;
 
 }

@@ -1,4 +1,4 @@
-﻿using Core.Contracts.Entities;
+﻿using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities
+namespace Shared.Entities
 {
     public class Teacher : EntityObject
     {

@@ -1,22 +1,23 @@
-﻿@page "/script"
-@page "/script/{type:string}"
+﻿@page "/scriptInput/{type?}"
 
-<textarea id="scriptInput" style="resize: none" @bin="@script"  name="script" rows="40" cols="100"/>
+<PageTitle> Choose Type </PageTitle>
 
 
-@if(Type == null)
-{
-    <PageTitle>New Key in</PageTitle>
-    // ToDo: select for ScriptTypes
-}
-else
-{
-    <PageTitle> Edit @Type Script </PageTitle>
-}
+<EditForm Model="@script">
+    <InputTextArea @bind-Value="script" id="scriptInput" />
+</EditForm>
+
+
 
 @code {
+
     [Parameter]
     public string? Type { get; set; }
-    string script = "" ;
+    string script = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        script = Type ?? "hallo";
+    }
 
 }

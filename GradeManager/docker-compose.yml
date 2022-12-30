@@ -6,18 +6,27 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: GradeeDb
+      POSTGRES_USER: postgres
+      POSTGRES_DB: GradeDb
+    healthcheck:
+          test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d GradeDb'"]
+          interval: 10s
+          timeout: 3s
+          retries: 55
     
   grades_backend:
     container_name: grades_backend
     image: grades_backend
     ports:
       - 5000:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     build: 
       context: .
       dockerfile: ./API/Dockerfile
     depends_on:
-      - grades_db
+      grades_db:
+        condition: service_healthy
 
   grades_web:
     container_name: grades_web

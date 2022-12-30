@@ -10,7 +10,7 @@ namespace Client.Services
         //Task GetAllGradesAsync();
         Task GetAllGradeKeysAsync();
         Task CreateGradeKeyAsync(GradeKey key);
-        Task UpadteGradeKeyAsync(int keyId);
+        Task UpadateGradeKeyAsync(int keyId);
         Task DeleteGradeKeyAsync(int keyId);
         //Task UpdateGradeAsync(int gradeId);
         //Task DeleteGradeAsync(int gradeId);

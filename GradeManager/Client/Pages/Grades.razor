@@ -17,8 +17,6 @@
             <th>Subject</th>
             <th>Uses</th>
             <th>ScriptType</th>
-
-
         </tr>
     </thead>
     <tbody>
@@ -46,7 +44,7 @@
 
     void EditScript(ScriptType type)
     {
-        NavigationManager.NavigateTo($"script/{type.ToString()}");
+        NavigationManager.NavigateTo($"/script");
     }
 
 }

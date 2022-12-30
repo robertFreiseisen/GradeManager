@@ -8,6 +8,7 @@ API/appsettings.json
 **/.settings
 **/.toolstarget
 **/.vs
+
 **/.vscode
 **/*.*proj.user
 **/*.dbmdl

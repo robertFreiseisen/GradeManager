@@ -1,8 +1,6 @@
 ﻿using Core.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Repos;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Persistence
 {
@@ -28,14 +26,12 @@ namespace Persistence
             SubjectRepository = new SubjectRepository(DbContext);
             GradeKeyRepository = new GradeKeyRepository(DbContext);
             GradeKindRepository= new GradeKindRepository(DbContext);
-
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await DbContext.SaveChangesAsync();
         }
-
         public async Task DeleteDatabaseAsync() => await DbContext.Database.EnsureDeletedAsync();
         public async Task CreateDatabaseAsync() => await DbContext.Database.EnsureCreatedAsync();
         public async Task MigrateDatabaseAsync()
@@ -46,11 +42,9 @@ namespace Persistence
                 await DbContext.Database.MigrateAsync();
             }
         }
-
         public void Dispose()
         {
             DbContext?.Dispose();
         }
-
     }
 }

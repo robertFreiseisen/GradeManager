@@ -9,9 +9,15 @@ namespace Client.Data.Services
         private readonly HttpClient _http;
         private readonly NavigationManager _navigationManager;
 
+        public GradeService(HttpClient http, NavigationManager navigationManager)
+        {
+            _http = http;
+            _navigationManager = navigationManager;
+        }
+
         public List<GradeKey> GradeKeys { get; set; } = new List<GradeKey>();
 
-        /*public async Task CreateGradeAsync(Grade grade)
+        public async Task CreateGradeAsync(Grade grade)
         {
             var result = await _http.PostAsJsonAsync("api/grades", grade);
             await SetGradesAsync( result);
@@ -21,7 +27,7 @@ namespace Client.Data.Services
         {
             var response = await result.Content.ReadFromJsonAsync<Grade>();
             _navigationManager.NavigateTo("grades");
-        }*/
+        }
         
         public async Task CreateGradeKeyAsync(GradeKey key)
         {
@@ -49,7 +55,7 @@ namespace Client.Data.Services
             }
         }
 
-        public Task UpadteGradeKeyAsync(int keyId)
+        public Task UpadateGradeKeyAsync(int keyId)
         {
             throw new NotImplementedException();
         }

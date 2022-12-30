@@ -38,7 +38,7 @@ namespace Persistence
             {
                 var configuration = ConfigurationHelper.GetConfiguration();
 
-                string connectionString = configuration["ConnectionStrings:DockerConnection"];
+                string connectionString = configuration["ConnectionStrings:DefaultConnection"];
                 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 optionsBuilder.UseNpgsql(connectionString);
                 //optionsBuilder.UseLoggerFactory(GetLoggerFactory());

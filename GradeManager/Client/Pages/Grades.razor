@@ -1,0 +1,50 @@
+﻿@page "/gradeKeys"
+
+@using Client.Data.Services;
+@using Client.Services;
+@using global::Shared.Entities;
+@inject IGradeService GradeService;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>GradeKeys Table</PageTitle>
+
+<h3>Grades</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Teacher</th>
+            <th>Subject</th>
+            <th>Uses</th>
+            <th>ScriptType</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in GradeService.GradeKeys)
+        {
+            <tr>
+                <td>@key.Name</td>
+                <td>@key.Teacher.Name</td>
+                <td>@key.Subject.Name</td>
+                <td>@key.SchoolClasses.Count()</td>
+                <td>@key.ScriptType.ToString()</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => EditScript(key.ScriptType))"><i class="oi oi-pencil"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await GradeService.GetAllGradeKeysAsync();
+    }
+
+    void EditScript(ScriptType type)
+    {
+        NavigationManager.NavigateTo($"/script");
+    }
+
+}

@@ -1,5 +1,5 @@
 ﻿using Core.Contracts;
-using Core.Contracts.Entities;
+using Shared.Entities;
 
 namespace Persistence.Repos
 {

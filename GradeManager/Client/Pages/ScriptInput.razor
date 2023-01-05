@@ -1,0 +1,23 @@
+﻿@page "/scriptInput/{type?}"
+
+<PageTitle> Choose Type </PageTitle>
+
+
+<EditForm Model="@script">
+    <InputTextArea @bind-Value="script" id="scriptInput" />
+</EditForm>
+
+
+
+@code {
+
+    [Parameter]
+    public string? Type { get; set; }
+    string script = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        script = Type ?? "hallo";
+    }
+
+}

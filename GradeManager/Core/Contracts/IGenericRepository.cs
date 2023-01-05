@@ -1,4 +1,4 @@
-﻿using Core.Contracts.Entities;
+﻿using Shared.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -62,7 +62,7 @@ namespace Core.Contracts
         /// <param name="filter"></param>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null,
+        Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null,
             params string[] includeProperties);
 
     }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Contracts.Entities
+namespace Core.Logic
 {
-    public class EntityObject : IEntity
+    public class ScriptRunner
     {
-        public int Id { get; set; }
+        // Logic to Run the scripts
     }
 }

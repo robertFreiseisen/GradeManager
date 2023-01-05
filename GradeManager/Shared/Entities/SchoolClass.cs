@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Contracts.Entities
+namespace Shared.Entities
 {
     public class SchoolClass : EntityObject 
     {

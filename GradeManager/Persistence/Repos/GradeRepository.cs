@@ -1,11 +1,6 @@
 ﻿using Core.Contracts;
-using Core.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.Entities;
 
 namespace Persistence.Repos
 {
@@ -16,6 +11,18 @@ namespace Persistence.Repos
         public GradeRepository(ApplicationDbContext context) : base(context)
         {
             DbContext = context;
+        }
+
+        public async Task AddGradeKeyAsync(GradeKey keyToAdd)
+        {
+            await DbContext.GradeKeys.AddAsync(keyToAdd);
+        }
+
+        public async Task<IEnumerable<GradeKey>> GetKeysByTeacherAsync(int TeacherId)
+        {
+            var result = await DbContext.GradeKeys.Where(k => k.TeacherId == TeacherId).ToArrayAsync();
+
+            return result;
         }
     }
 }

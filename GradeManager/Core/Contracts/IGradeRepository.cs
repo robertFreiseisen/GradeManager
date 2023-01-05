@@ -1,14 +1,10 @@
-﻿using Core.Contracts.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.Entities;
 
 namespace Core.Contracts
 {
     public interface IGradeRepository : IGenericRepository<Grade>
     {
-
+        Task AddGradeKeyAsync(GradeKey keyToAdd);
+        Task<IEnumerable<GradeKey>> GetKeysByTeacherAsync(int TeacherId);
     }
 }

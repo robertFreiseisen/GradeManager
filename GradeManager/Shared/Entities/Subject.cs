@@ -1,4 +1,4 @@
-﻿namespace Core.Contracts.Entities
+﻿namespace Shared.Entities
 {
     public class Subject : EntityObject
     {

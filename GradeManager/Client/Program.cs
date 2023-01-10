@@ -9,9 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
-builder.Services.AddHttpClient();
-builder.Services.AddRouting();
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://grades_backend/") });
 builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddRouting();
 
 var app = builder.Build();
 

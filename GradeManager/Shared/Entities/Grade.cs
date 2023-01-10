@@ -19,7 +19,6 @@ namespace Shared.Entities
         
         [Required]
         public int Graduate { get; set; }
-        
         public string? Note { get; set; }
         
         [Required]
@@ -36,6 +35,9 @@ namespace Shared.Entities
         [Required]
         public Teacher? Teacher { get; set; }
 
-        public string? Kind { get; set; } // Test oder MAK, Hausuebung
+        [ForeignKey("GradeKind")]
+        [Required]
+        public int GradeKindId { get; set; }
+        public GradeKind GradeKind { get; set; } // Test oder MAK, Hausuebung
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Contracts
 {
-    public interface ISubjectRepository : IGenericRepository<Subject>
+    public interface IGradeKindRepository : IGenericRepository<GradeKind>
     {
     }
 }

@@ -15,7 +15,7 @@ services:
           retries: 55
     
   grades_backend:
-    container_name: grades_backend
+    container_name: ${DOCKER_REGISTRY-}grades_backend
     image: grades_backend
     ports:
       - 5000:80
@@ -29,9 +29,13 @@ services:
         condition: service_healthy
 
   grades_web:
+    image: ${DOCKER_REGISTRY-}grades_web
     container_name: grades_web
     ports: 
       - 8080:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
     build: 
        context: .
        dockerfile: ./Client/Dockerfile

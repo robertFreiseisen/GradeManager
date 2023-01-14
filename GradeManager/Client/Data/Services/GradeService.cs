@@ -2,20 +2,19 @@
 using Microsoft.AspNetCore.Components;
 using Shared.Entities;
 
+
 namespace Client.Data.Services
 {
     public class GradeService : IGradeService
     {
         private readonly HttpClient _http;
-        private readonly NavigationManager _navigationManager;
-
-        public GradeService(HttpClient http, NavigationManager navigationManager)
+        public GradeService(HttpClient http)
         {
             _http = http;
-            _navigationManager = navigationManager;
         }
 
         public List<GradeKey> GradeKeys { get; set; } = new List<GradeKey>();
+        public List<Grade> Grades { get; set; } = new List<Grade>();
 
         public async Task CreateGradeAsync(Grade grade)
         {
@@ -26,12 +25,11 @@ namespace Client.Data.Services
         private async Task SetGradesAsync(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<Grade>();
-            _navigationManager.NavigateTo("grades");
         }
         
         public async Task CreateGradeKeyAsync(GradeKey key)
         {
-            var result = await _http.PostAsJsonAsync<GradeKey>("api/grades/keys", key);
+            var result = await _http.PostAsJsonAsync<GradeKey>("http://grades_backend/keys/", key);
             await SetKey(result);
         }
 
@@ -48,10 +46,18 @@ namespace Client.Data.Services
 
         public async Task GetAllGradeKeysAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<GradeKey>>("api/grades/keys");
+            var result = await _http.GetFromJsonAsync<List<GradeKey>>("http://grades_backend/keys");
             if (result != null)
             {
                 GradeKeys = result;
+            }
+        }
+        public async Task GetAllGradesAsync()
+        {
+            var result = await _http.GetFromJsonAsync<List<Grade>>("http://grades_backend/grades");
+            if (result != null)
+            {
+                Grades = result;
             }
         }
 

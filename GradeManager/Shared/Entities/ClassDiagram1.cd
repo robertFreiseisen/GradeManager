@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Shared.Entities.EntityObject" Collapsed="true">
+    <Position X="12.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\EntityObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Shared.Entities.Grade">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAUABAAAAAAIAACAAAAAAAAAAAAAAAAAEKAAA=</HashCode>
+      <FileName>Entities\Grade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.GradeKey">
+    <Position X="17.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAAAIAAAIEACAQAAEAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Entities\GradeKey.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.GradeKind">
+    <Position X="6" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\GradeKind.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.SchoolClass">
+    <Position X="15" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAEAAAAQAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\SchoolClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.Student">
+    <Position X="14.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAIAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Student.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.Subject">
+    <Position X="8.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Subject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shared.Entities.Teacher">
+    <Position X="12.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAQAEAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Teacher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Shared.Entities.IEntity" Collapsed="true">
+    <Position X="22" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\IEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Shared.Entities.ScriptType" Collapsed="true">
+    <Position X="22" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAQA=</HashCode>
+      <FileName>Entities\GradeKey.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

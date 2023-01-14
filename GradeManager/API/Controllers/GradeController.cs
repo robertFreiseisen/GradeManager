@@ -5,7 +5,7 @@ using Shared.Entities;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/grades")]
+    [Route("/grades")]
     public class GradeController : ControllerBase
     {
         private IConfiguration Config { get; }

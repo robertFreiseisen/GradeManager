@@ -15,6 +15,7 @@ namespace Client.Data.Services
 
         public List<GradeKey> GradeKeys { get; set; } = new List<GradeKey>();
         public List<Grade> Grades { get; set; } = new List<Grade>();
+        public List<Student> Students { get; set;} = new List<Student>();
 
         public async Task CreateGradeAsync(Grade grade)
         {
@@ -64,6 +65,15 @@ namespace Client.Data.Services
         public Task UpadateGradeKeyAsync(int keyId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task GetAllStudentsAsync()
+        {
+            var result = await _http.GetFromJsonAsync<List<Student>>("http://grades_backend/grades");
+            if (result != null)
+            {
+                Students = result;
+            }
         }
     }
 }

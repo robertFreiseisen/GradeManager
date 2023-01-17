@@ -16,19 +16,19 @@
             <th>Name</th>
             <th>Teacher</th>
             <th>Subject</th>
-            <th>Uses</th>
+            <th>Student</th>
             <th>ScriptType</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var key in GradeService.Grades)
+        @foreach (var key in GradeService.Students)
         {
             <tr>
-                <td>@key.Graduate</td>
-                <td>@key.Teacher.Name</td>
-                <td>@key.Subject.Name</td>
-                @*<td>@key.SchoolClasses.Count()</td>
-                <td>@key.ScriptType.ToString()</td>*@
+                <td>@key.Name</td>
+                @*<td>@key.Teacher.Name</td>
+                <td>@key.Subject.Name</td>*@
+                @*<td>@key.SchoolClasses.Count()</td>*@
+                @*<td>@key.ScriptType.ToString()</td>*@
                 @*<td>
                     <button class="btn btn-primary" @onclick="(() => EditScript(key.ScriptType))"><i class="oi oi-pencil"></i></button>
                 </td>*@

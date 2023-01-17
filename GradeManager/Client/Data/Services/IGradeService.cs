@@ -6,6 +6,7 @@ namespace Client.Services
     {
         public List<GradeKey> GradeKeys { get; set; }
         public List<Grade> Grades { get; set; }
+        public List<Student> Students { get; set; }
 
         //Task CreateGradeAsync(Grade grade);
         //Task GetAllGradesAsync();
@@ -14,6 +15,7 @@ namespace Client.Services
         Task UpadateGradeKeyAsync(int keyId);
         Task DeleteGradeKeyAsync(int keyId);
         Task GetAllGradesAsync();
+        Task GetAllStudentsAsync();
         //Task UpdateGradeAsync(int gradeId);
         //Task DeleteGradeAsync(int gradeId);
     }

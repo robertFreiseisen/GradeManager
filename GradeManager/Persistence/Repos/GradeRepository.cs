@@ -24,5 +24,14 @@ namespace Persistence.Repos
 
             return result;
         }
+
+        public async Task<IEnumerable<Grade>> GetByClassAndSubjectAsync(int schoolClassId, int subject)
+        {
+            return await DbContext.Grades
+                .Include(g => g.Subject)
+                .Include(g => g.Student)
+                .Where(k => k.Student!.SchoolClassId == schoolClassId && k.SubjectId == subject)
+                .ToListAsync();
+        }
     }
 }

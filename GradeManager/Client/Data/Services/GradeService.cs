@@ -18,14 +18,14 @@ namespace Client.Data.Services
         public async Task CreateGradeAsync(Grade grade)
         {
             var result = await _http.PostAsJsonAsync("api/grades", grade);
-            await SetGradesAsync( result);
+            await SetGradesAsync(result);
         }
 
         private async Task SetGradesAsync(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<Grade>();
         }
-        
+
         public async Task CreateGradeKeyAsync(GradeKey key)
         {
             var result = await _http.PostAsJsonAsync<GradeKey>("grades/", key);
@@ -52,9 +52,16 @@ namespace Client.Data.Services
             }
         }
 
-        public Task UpadateGradeKeyAsync(int keyId)
+        public async Task UpadateGradeKeyAsync(GradeKey gradeKey)
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync<GradeKey>("http://grades_backend/keys", gradeKey);
+
+            await this.GetAllGradeKeysAsync();
+        }
+
+        public GradeKey? GetGradeKeyById(int? id)
+        {
+            return GradeKeys.SingleOrDefault(k => k.Id == id);
         }
     }
 }

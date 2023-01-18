@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://grades_backend/") });
+builder.Services.AddHttpClient<IGradeService, GradeService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddRouting();
 

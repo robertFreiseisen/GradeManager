@@ -7,17 +7,16 @@
 @inject IGradeService GradeService;
 @inject NavigationManager NavigationManager;
 
-<PageTitle>Grades Table</PageTitle>
+<PageTitle>Schoolclasses</PageTitle>
 
 <h3>Grades</h3>
 <table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Teacher</th>
-            <th>Subject</th>
-            <th>Student</th>
-            <th>ScriptType</th>
+            <th>ID</th>
+            <th>Schoollevel</th>
+            <th>Schoolyear</th>           
         </tr>
     </thead>
     <tbody>
@@ -26,6 +25,8 @@
             <tr>
                 <td>@key.Name</td>
                 <td>@key.Id</td>
+                <td>@key.SchoolLevel</td>
+                <td>@key.SchoolYear</td>
                 @*<td>@key.Teacher.Name</td>
                 <td>@key.Subject.Name</td>*@
                 @*<td>@key.SchoolClasses.Count()</td>*@

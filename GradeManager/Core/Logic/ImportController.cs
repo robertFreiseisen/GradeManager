@@ -118,11 +118,11 @@ namespace Core.Logic
             var schoolclasses = await ReadFromCSV();
             if (schoolclasses.Count() == 0)
             {
-                Console.WriteLine("!!! Es wurden keine Students eingelesen");
+                Console.WriteLine("!!! Es wurden keine Schoolclasses eingelesen");
                 return;
             }
 
-            Console.WriteLine($"  Es wurden {schoolclasses.Count()} Students eingelesen!");
+            Console.WriteLine($"  Es wurden {schoolclasses.Count()} Schoolclasses eingelesen!");
             await UnitOfWork.SchoolClassRepository.AddRangeAsync(schoolclasses);
             await UnitOfWork.SaveChangesAsync();
         }

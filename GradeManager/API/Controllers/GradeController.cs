@@ -43,6 +43,16 @@ namespace API.Controllers
             return Ok(grades);
         }
 
+        [HttpGet("/schoolclasses")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<SchoolClass>>> GetAllSchoolclassesAsync()
+        {
+            var students = await UnitOfWork.SchoolClassRepository.GetAllAsync();
+
+            return Ok(students);
+        }
+
 
         [HttpPost("/keys")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

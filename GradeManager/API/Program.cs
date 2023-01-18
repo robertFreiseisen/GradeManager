@@ -18,7 +18,7 @@ var uow = app.Services.GetService<IUnitOfWork>()!;
 uow.MigrateDatabaseAsync().Wait();
 var import = app.Services.GetService<ImportController>();
 
-await import?.InitUnitOfWork();
+await import.InitUnitOfWork();
 //await import?.ReadFromCSV();
 
 // Configure the HTTP request pipeline.

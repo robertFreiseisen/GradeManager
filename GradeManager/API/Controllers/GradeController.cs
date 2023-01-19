@@ -29,12 +29,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Grade>>> GetAllGradesAsync()
         {
-            var grades = await UnitOfWork.GradeRepository.GetAllAsync();
+            var grades = await UnitOfWork.GradeRepository.GetAllWithStudentsAsync();
+            var gradesReturn = grades.Distinct();
 
-            return Ok(grades);
+            return Ok(gradesReturn);
         }
 
-        [HttpGet("/calcForClass")]
+        [HttpGet("/calcForClass/{schoolClassId}/{subjectId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Grade>>> CalculateGradesForClassAsync(int schoolClassId, int subjectId)

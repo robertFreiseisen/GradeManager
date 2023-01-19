@@ -1,6 +1,7 @@
 using Core.Contracts;
 using Core.Logic;
 using Persistence;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(_ => new UnitOfWork());
 builder.Services.AddSingleton<ImportController, ImportController>();
 
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var app = builder.Build();
 
 var uow = app.Services.GetService<IUnitOfWork>()!;

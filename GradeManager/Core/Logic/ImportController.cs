@@ -15,9 +15,9 @@ namespace Core.Logic
         const string Filename = "TestDaten.csv";
         private IUnitOfWork UnitOfWork { get; }
 
-        public ImportController(IUnitOfWork unitOfWork) 
+        public ImportController(IUnitOfWork unitOfWork)
         {
-            UnitOfWork= unitOfWork;
+            UnitOfWork = unitOfWork;
         }
 
         #region ReadfromCSV
@@ -27,7 +27,7 @@ namespace Core.Logic
                 .Skip(1)
                 .Select(l => l.Split(";"))
                 .ToList();
-           
+
             var schoolClasses = lines
                 .Select(t => new SchoolClass
                 {
@@ -37,8 +37,8 @@ namespace Core.Logic
                 }).ToList();
 
             return schoolClasses;
-        }      
-        public async static Task<IEnumerable<Student>> ReadStudentsfromCSV()
+        }
+        /*public async static Task<IEnumerable<Student>> ReadStudentsfromCSV()
         {
             var lines = (await File.ReadAllLinesAsync(Filename))
                 .Skip(1)
@@ -52,7 +52,7 @@ namespace Core.Logic
                 }).ToList();
 
             return students;
-        }
+        }/*
         public async static Task<IEnumerable<Teacher>> ReadTeachersfromCSV()
         {
             var lines = (await File.ReadAllLinesAsync(Filename))
@@ -67,8 +67,24 @@ namespace Core.Logic
                 }).ToList();
 
             return teachers;
-        }
-        public async static Task<IEnumerable<Subject>> ReadSubjectsfromCSV()
+        }*/
+        /* public async static Task<IEnumerable<Subject>> ReadSubjectsfromCSV()
+         {
+             var lines = (await File.ReadAllLinesAsync(Filename))
+                 .Skip(1)
+                 .Select(l => l.Split(";"))
+                 .ToList();
+
+             var subjects = lines
+             .Select(t => new Subject
+             {
+                 Name = t[2]
+             }).ToList();
+
+
+             return subjects;
+         }*/
+        public async static Task<IEnumerable<Grade>> ReadGradesfromCSV(List<SchoolClass> classes)
         {
             var lines = (await File.ReadAllLinesAsync(Filename))
                 .Skip(1)
@@ -76,24 +92,32 @@ namespace Core.Logic
                 .ToList();
 
             var subjects = lines
-            .Select(t => new Subject
-            {
-                Name = t[2]
-            }).ToList();
+               .Select(t => new Subject
+               {
+                   
+                   Name = t[2]
+               }).ToList();
 
-            return subjects;
-        }
-        public async static Task<IEnumerable<Grade>> ReadGradesfromCSV()
-        {
-            var lines = (await File.ReadAllLinesAsync(Filename))
-                .Skip(1)
-                .Select(l => l.Split(";"))
-                .ToList();
+            var teachers = lines
+             .Select(t => new Teacher
+             {
+                 Name = t[1]
+             }).ToList();
+            var students = lines
+            .Select(s => new Student
+            {
+                SchoolClassId = classes.Single(c => c.Name == s[4]).Id,
+                Name = s[0]
+            }).ToList();
 
             var grades = lines
             .Select(t => new Grade
             {
-                Graduate = int.Parse(t[3])
+                Student = students.Single(s => s.Name == t[0]),
+                Teacher = teachers.Single(te => te.Name == t[1]),
+                Subject = subjects.Single(s => s.Name == t[2]),
+                Graduate = int.Parse(t[3]),
+
             }).ToList();
 
             return grades;
@@ -122,6 +146,8 @@ namespace Core.Logic
             //    return;
             //}
 
+            
+
             Console.WriteLine($"  Es wurden {schoolclasses.Count()} Schoolclasses eingelesen!");
             //Console.WriteLine($"  Es wurden {students.Count()} Students eingelesen!");
             //Console.WriteLine($"  Es wurden {teachers.Count()} Teacher eingelesen!");
@@ -129,6 +155,15 @@ namespace Core.Logic
             //Console.WriteLine($"  Es wurden {grades.Count()} Grades eingelesen!");
 
             await UnitOfWork.SchoolClassRepository.AddRangeAsync(schoolclasses);
+            await UnitOfWork.SaveChangesAsync();
+
+            var classes = await UnitOfWork.SchoolClassRepository.GetAllAsync();
+
+            var grades = await ReadGradesfromCSV(classes.ToList());
+
+
+
+            await UnitOfWork.GradeRepository.AddRangeAsync(grades);
             //await UnitOfWork.StudentRepository.AddRangeAsync(students);
             ////await UnitOfWork.TeacherRepository.AddRangeAsync(teachers);
             //await UnitOfWork.SubjectRepository.AddRangeAsync(subjects);

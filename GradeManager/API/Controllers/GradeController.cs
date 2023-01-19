@@ -1,4 +1,4 @@
-﻿using Core.Contracts;
+using Core.Contracts;
 using Core.Logic;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Entities;
@@ -6,7 +6,7 @@ using Shared.Entities;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/grades")]
+    [Route("/grades")]
     public class GradeController : ControllerBase
     {
         private IConfiguration Config { get; }
@@ -60,6 +60,17 @@ namespace API.Controllers
             return Ok(grades);
         }
 
+
+        [HttpGet("/schoolclasses")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<SchoolClass>>> GetAllSchoolclassesAsync()
+        {
+            var students = await UnitOfWork.SchoolClassRepository.GetAllAsync();
+
+            return Ok(students);
+        }
+        
         [HttpPut("/keys")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,7 +104,7 @@ namespace API.Controllers
 
             return Ok(gradeKeyDb);
         }
-
+        
         [HttpPost("/keys")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -42,8 +42,6 @@ namespace API.Controllers
             var calc = new GradeCalculator();
 
             var result = await calc.CalculateKeysForClassAndSubject(schoolClassId, subjectId, UnitOfWork);
-
-
             if (result == null)
             {
                 return BadRequest();

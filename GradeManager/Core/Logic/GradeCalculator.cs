@@ -13,11 +13,17 @@ namespace Core.Logic
     {
         // Logic to Run the scripts
 
-        public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
+        public async Task<List<Grade>?> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
         {
             var grades = await (uow.GradeRepository.GetByClassAndSubjectAsync(schoolClassId, subject));
-            var g1 = grades.FirstOrDefault();
-            var key = await uow.GradeKeyRepository.GetByTeacherAndSubjectAsync( g1.TeacherId , g1.SubjectId);
+
+            if (grades == null || grades.Count() == 0)
+            {
+                return null;
+            }
+
+            var g1 = grades.First();
+            var key = await uow.GradeKeyRepository.GetByTeacherAndSubjectAsync(g1.TeacherId, g1.SubjectId);
 
             if (key == null)
             {

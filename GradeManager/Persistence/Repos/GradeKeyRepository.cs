@@ -16,5 +16,10 @@ namespace Persistence.Repos
         {
             DbContext = context;
         }
+
+        public async Task<GradeKey?> GetByTeacherAndSubjectAsync(int teacherId, int subjectId)
+        {
+            return await DbContext.GradeKeys.SingleOrDefaultAsync(k => k.TeacherId == teacherId && k.SubjectId == subjectId);
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace Core.Contracts
 {
     public interface IGradeKeyRepository : IGenericRepository<GradeKey>
     {
+        Task<GradeKey?> GetByTeacherAndSubjectAsync(int teacherId, int subjectId);
     }
 }

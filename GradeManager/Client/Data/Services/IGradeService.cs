@@ -1,4 +1,4 @@
-﻿using Shared.Entities;
+using Shared.Entities;
 
 namespace Client.Services
 {
@@ -10,9 +10,10 @@ namespace Client.Services
 
         //Task CreateGradeAsync(Grade grade);
         //Task GetAllGradesAsync();
+        GradeKey? GetGradeKeyById(int? id);
         Task GetAllGradeKeysAsync();
         Task CreateGradeKeyAsync(GradeKey key);
-        Task UpadateGradeKeyAsync(int keyId);
+        Task UpadateGradeKeyAsync(GradeKey keyId);
         Task DeleteGradeKeyAsync(int keyId);
         Task GetAllGradesAsync();
         Task GetAllSchoolclassesAsync();

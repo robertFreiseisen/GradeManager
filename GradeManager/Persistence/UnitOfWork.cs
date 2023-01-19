@@ -7,16 +7,12 @@ namespace Persistence
     public class UnitOfWork : IUnitOfWork
     {
         public ApplicationDbContext DbContext { get; }
-
         public ISchoolClassRepository SchoolClassRepository { get; }
-
         public IGradeRepository GradeRepository { get; }
-
         public IStudentRepository StudentRepository { get; }
         public ISubjectRepository SubjectRepository { get; }
         public IGradeKeyRepository GradeKeyRepository { get; }
         public IGradeKindRepository GradeKindRepository { get; }
-
         public UnitOfWork()
         {
             DbContext = new ApplicationDbContext();

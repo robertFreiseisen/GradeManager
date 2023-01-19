@@ -1,0 +1,14 @@
+@startuml
+
+GradeCalculator ---> LuaScriptRunner : use
+GradeCalculator ---> PythonScriptRunner : use
+GradeCalculator ---> CSharpScriptRunner : use
+GradeCalculator ---> JavaScriptRunner : use
+
+
+GradeCalculator : CalculateKeysForClassAndSubject()
+LuaScriptRunner : RunScript()
+PythonScriptRunner : RunScript()
+CSharpScriptRunner : RunScript()
+JavaScriptRunner : RunScript()
+@enduml

@@ -1,4 +1,4 @@
-﻿@page "/grades"
+﻿@page "/gradeKeys"
 
 @using Client.Data.Services;
 @using Client.Services;
@@ -7,33 +7,31 @@
 @inject IGradeService GradeService;
 @inject NavigationManager NavigationManager;
 
-<PageTitle>Schoolclasses</PageTitle>
+<PageTitle>GradeKeys Table</PageTitle>
 
 <h3>Grades</h3>
 <table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th>ID</th>
-            <th>Schoollevel</th>
-            <th>Schoolyear</th>           
+            <th>Teacher</th>
+            <th>Subject</th>
+            <th>Uses</th>
+            <th>ScriptType</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var key in GradeService.Schooclasses)
+        @foreach (var key in GradeService.GradeKeys)
         {
             <tr>
                 <td>@key.Name</td>
-                <td>@key.Id</td>
-                <td>@key.SchoolLevel</td>
-                <td>@key.SchoolYear</td>
-                @*<td>@key.Teacher.Name</td>
-                <td>@key.Subject.Name</td>*@
-                @*<td>@key.SchoolClasses.Count()</td>*@
-                @*<td>@key.ScriptType.ToString()</td>*@
-                @*<td>
+                <td>@key.Teacher.Name</td>
+                <td>@key.Subject.Name</td>
+                <td>@key.SchoolClasses.Count()</td>
+                <td>@key.ScriptType.ToString()</td>
+                <td>
                     <button class="btn btn-primary" @onclick="(() => EditScript(key.ScriptType))"><i class="oi oi-pencil"></i></button>
-                </td>*@
+                </td>
             </tr>
         }
     </tbody>
@@ -42,8 +40,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await GradeService.GetAllGradesAsync();
-        await GradeService.GetAllSchoolclassesAsync();
+        await GradeService.GetAllGradeKeysAsync();
     }
 
     void EditScript(ScriptType type)

@@ -12,7 +12,7 @@ namespace Core.Logic
     {
         private static Lua state = new Lua();
 
-        public static Grade RunScript(GradeKey key)
+        public static Grade RunScript(GradeKey key, List<Grade> gradesPerStudent)
         {
             if (key.Calculation == string.Empty || key.UsedKinds == null)
             {
@@ -25,23 +25,31 @@ namespace Core.Logic
             {
                 return null;
             }
+
             var result = new Grade();
-            try
-            {
-                state.DoString(code);
-                state.DoString(@"graduate = calculate()");
-                result.Teacher = key.Teacher;
-                var gr = state["graduate"];
-                if (gr != null) 
-                {
-                    result.Graduate = Convert.ToInt32(gr);
-                }
-            }
-            catch (Exception)
+
+            foreach (var item in gradesPerStudent)
             {
 
-                throw;
+                try
+                {
+                    state.DoString(code);
+                    state.DoString(@"graduate = calculate()");
+                    result.Teacher = key.Teacher;
+                    var gr = state["graduate"];
+                    if (gr != null)
+                    {
+                        result.Graduate = Convert.ToInt32(gr);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
             }
+            
 
             return result;
         }

@@ -38,6 +38,6 @@ namespace Shared.Entities
         [ForeignKey("GradeKind")]
         [Required]
         public int GradeKindId { get; set; }
-        public GradeKind GradeKind { get; set; } // Test oder MAK, Hausuebung
+        public GradeKind GradeKind { get; set; } = new GradeKind { Name = "Mitarbeit" };
     }
 }

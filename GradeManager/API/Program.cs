@@ -1,5 +1,7 @@
 using Core.Contracts;
+using Core.Logic;
 using Persistence;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,11 +11,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(_ => new UnitOfWork());
+builder.Services.AddSingleton<ImportController, ImportController>();
 
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var app = builder.Build();
 
 var uow = app.Services.GetService<IUnitOfWork>()!;
 uow.MigrateDatabaseAsync().Wait();
+var import = app.Services.GetService<ImportController>();
+
+await import.InitUnitOfWork();
+//await import?.ReadFromCSV();
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{

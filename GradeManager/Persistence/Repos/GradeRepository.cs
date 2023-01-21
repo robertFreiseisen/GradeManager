@@ -33,5 +33,10 @@ namespace Persistence.Repos
                 .Where(k => k.Student!.SchoolClassId == schoolClassId && k.SubjectId == subject)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Grade>> GetAllWithStudentsAsync()
+        {
+            return await DbContext.Grades.Include(g => g.Student).ToListAsync();
+        }
     }
 }

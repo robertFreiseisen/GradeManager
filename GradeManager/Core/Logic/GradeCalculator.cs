@@ -9,9 +9,20 @@ using System.Threading.Tasks;
 
 namespace Core.Logic
 {
+    /// <summary>
+    /// Handels the diffrent types of Scripts and
+    /// calls methods for calculation from each ScriptType
+    /// </summary>
     public class GradeCalculator
     {
-        // Logic to Run the scripts
+        private readonly IUnitOfWork uow;
+        private readonly LuaScriptRunner luaScriptRunner;
+
+        public GradeCalculator(IUnitOfWork uow, LuaScriptRunner luaScriptRunner)
+        {
+            this.uow = uow;
+            this.luaScriptRunner = luaScriptRunner;
+        }
 
         public async Task<List<Grade>?> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
         {
@@ -41,7 +52,7 @@ namespace Core.Logic
                 case ScriptType.None:
                     break;
                 case ScriptType.Lua:
-                    result = LuaScriptRunner.RunScript(gradeKey);
+                    result = luaScriptRunner.RunScript(gradeKey);
                     break;
                 case ScriptType.Python:
                     break;

@@ -25,51 +25,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GradeKeys",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Calculation = table.Column<string>(type: "text", nullable: true),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    ScriptType = table.Column<int>(type: "integer", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GradeKeys", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GradeKeys_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SchoolClasses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    SchoolLevel = table.Column<int>(type: "integer", nullable: false),
-                    SchoolYear = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TeacherId = table.Column<int>(type: "integer", nullable: true),
-                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SchoolClasses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SchoolClasses_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Subjects",
                 columns: table => new
                 {
@@ -84,6 +39,84 @@ namespace Persistence.Migrations
                     table.PrimaryKey("PK_Subjects", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Subjects_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GradeKeys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Calculation = table.Column<string>(type: "text", nullable: true),
+                    TeacherId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    SubjectId = table.Column<int>(type: "integer", nullable: false),
+                    ScriptType = table.Column<int>(type: "integer", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GradeKeys", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GradeKeys_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GradeKeys_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GradeKinds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    GradeKeyId = table.Column<int>(type: "integer", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GradeKinds", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GradeKinds_GradeKeys_GradeKeyId",
+                        column: x => x.GradeKeyId,
+                        principalTable: "GradeKeys",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SchoolClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    SchoolLevel = table.Column<int>(type: "integer", nullable: false),
+                    SchoolYear = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    GradeKeyId = table.Column<int>(type: "integer", nullable: true),
+                    TeacherId = table.Column<int>(type: "integer", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SchoolClasses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SchoolClasses_GradeKeys_GradeKeyId",
+                        column: x => x.GradeKeyId,
+                        principalTable: "GradeKeys",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SchoolClasses_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id");
@@ -121,18 +154,18 @@ namespace Persistence.Migrations
                     Note = table.Column<string>(type: "text", nullable: true),
                     SubjectId = table.Column<int>(type: "integer", nullable: false),
                     TeacherId = table.Column<int>(type: "integer", nullable: false),
-                    Kind = table.Column<string>(type: "text", nullable: true),
-                    GradeKeyId = table.Column<int>(type: "integer", nullable: true),
+                    GradeKindId = table.Column<int>(type: "integer", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Grades", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Grades_GradeKeys_GradeKeyId",
-                        column: x => x.GradeKeyId,
-                        principalTable: "GradeKeys",
-                        principalColumn: "Id");
+                        name: "FK_Grades_GradeKinds_GradeKindId",
+                        column: x => x.GradeKindId,
+                        principalTable: "GradeKinds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Grades_Students_StudentId",
                         column: x => x.StudentId,
@@ -154,14 +187,24 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_GradeKeys_SubjectId",
+                table: "GradeKeys",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GradeKeys_TeacherId",
                 table: "GradeKeys",
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grades_GradeKeyId",
-                table: "Grades",
+                name: "IX_GradeKinds_GradeKeyId",
+                table: "GradeKinds",
                 column: "GradeKeyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_GradeKindId",
+                table: "Grades",
+                column: "GradeKindId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_StudentId",
@@ -177,6 +220,11 @@ namespace Persistence.Migrations
                 name: "IX_Grades_TeacherId",
                 table: "Grades",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SchoolClasses_GradeKeyId",
+                table: "SchoolClasses",
+                column: "GradeKeyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SchoolClasses_TeacherId",
@@ -200,16 +248,19 @@ namespace Persistence.Migrations
                 name: "Grades");
 
             migrationBuilder.DropTable(
-                name: "GradeKeys");
+                name: "GradeKinds");
 
             migrationBuilder.DropTable(
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Subjects");
+                name: "SchoolClasses");
 
             migrationBuilder.DropTable(
-                name: "SchoolClasses");
+                name: "GradeKeys");
+
+            migrationBuilder.DropTable(
+                name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Teachers");

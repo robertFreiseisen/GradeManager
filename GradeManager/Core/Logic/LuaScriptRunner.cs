@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace Core.Logic
 {
-    internal static class LuaScriptRunner
+    /// <summary>
+    /// Runs lua-scripts
+    /// </summary>
+    public class LuaScriptRunner
     {
-        private static Lua state = new Lua();
+        private readonly Lua state;
 
-        public static Grade RunScript(GradeKey key)
+        public LuaScriptRunner()
+        {
+            this.state = new Lua();
+        }
+
+        public Grade RunScript(GradeKey key)
         {
             if (key.Calculation == string.Empty || key.UsedKinds == null)
             {

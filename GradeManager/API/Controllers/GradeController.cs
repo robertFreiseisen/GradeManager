@@ -9,14 +9,17 @@ namespace API.Controllers
     [Route("api/grades")]
     public class GradeController : ControllerBase
     {
+        private readonly GradeCalculator gradeCalculator;
+
         private IConfiguration Config { get; }
         private IUnitOfWork UnitOfWork { get; }
         //private readonly ILogger<StudentsController> _logger;
 
-        public GradeController(IConfiguration config, IUnitOfWork unitOfWork) : base()//ILogger<StudentsController> logger)
+        public GradeController(IConfiguration config, IUnitOfWork unitOfWork, GradeCalculator gradeCalculator) : base()//ILogger<StudentsController> logger)
         {
             //_logger = logger;
             UnitOfWork = unitOfWork;
+            this.gradeCalculator = gradeCalculator;
             Config = config;
         }
 
@@ -39,9 +42,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Grade>>> CalculateGradesForClassAsync(int schoolClassId, int subjectId)
         {
-            var calc = new GradeCalculator();
-
-            var result = await calc.CalculateKeysForClassAndSubject(schoolClassId, subjectId, UnitOfWork);
+            var result = await gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId, UnitOfWork);
             if (result == null)
             {
                 return BadRequest();

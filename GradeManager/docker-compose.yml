@@ -15,22 +15,32 @@ services:
           retries: 55
     
   grades_backend:
-    container_name: ${DOCKER_REGISTRY-}grades_backend
+    container_name: grades_backend
     image: grades_backend
+    privileged: true
     ports:
       - 5000:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=UserID=postgres;Password=postgres;Server=grades_db;Port=5432;Database=GradeDb;Integrated Security=true;Pooling=true;",
+
     build: 
       context: .
       dockerfile: ./API/Dockerfile
     depends_on:
       grades_db:
         condition: service_healthy
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      com.microsoft.visualstudio.debuggee.arguments: " --additionalProbingPath /root/.nuget/packages --additionalProbingPath /root/.nuget/fallbackpackages  bin/Debug/net6.0/API.dll"
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/bash -c \"if PID=$$(pidof -x dotnet); then kill $$PID; fi\""
 
   grades_web:
     image: ${DOCKER_REGISTRY-}grades_web
     container_name: grades_web
+    volumes:
+    - /Client:/Client
     ports: 
       - 8080:80
     environment:
@@ -41,6 +51,9 @@ services:
        dockerfile: ./Client/Dockerfile
     depends_on: 
       - grades_backend
+
+
+
 
 
 

@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230119205038_InitMigration")]
-    partial class InitMigration
+    [Migration("20230108141316_AddGradeKindToGrade")]
+    partial class AddGradeKindToGrade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

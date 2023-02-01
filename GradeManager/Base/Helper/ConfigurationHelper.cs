@@ -14,6 +14,7 @@ namespace Base.Helper
         {
             var configuration = new ConfigurationBuilder()
             .SetBasePath(Environment.CurrentDirectory)
+            .AddEnvironmentVariables()
             .AddJsonFile("appsettings.json")
             .Build();
             return configuration;

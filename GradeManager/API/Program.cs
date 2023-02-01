@@ -1,4 +1,6 @@
 using Core.Contracts;
+using Core.Logic;
+using NLua.Exceptions;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(_ => new UnitOfWork());
+builder.Services.AddTransient<LuaScriptRunner>();
+builder.Services.AddTransient<GradeCalculator>();
 
 var app = builder.Build();
 

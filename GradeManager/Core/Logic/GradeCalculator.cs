@@ -24,7 +24,7 @@ namespace Core.Logic
             this.luaScriptRunner = luaScriptRunner;
         }
 
-        public async Task<List<Grade>?> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
+        public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
         {
             var grades = await (uow.GradeRepository.GetByClassAndSubjectAsync(schoolClassId, subject));
 
@@ -41,18 +41,24 @@ namespace Core.Logic
                 return null;
             }
 
-            return grades.Select(item => RunScript(key)).ToList();
+
+            var result = new List<Grade>();
+
+            var studentGrades = grades.GroupBy(g => g.Student).Select(g => this.RunScript(key, g.ToList(), g.Key!));
+            return studentGrades.ToList();
         }
 
-        private Grade RunScript(GradeKey gradeKey)
+        /// Handels the script type
+        private Grade RunScript(GradeKey gradeKey, List<Grade> grades, Student student)
         {
             var result = new Grade();
+            result.Student = student;
             switch (gradeKey.ScriptType)
             {
                 case ScriptType.None:
                     break;
                 case ScriptType.Lua:
-                    result = luaScriptRunner.RunScript(gradeKey);
+                    result = luaScriptRunner.RunScript(gradeKey, grades);
                     break;
                 case ScriptType.Python:
                     break;

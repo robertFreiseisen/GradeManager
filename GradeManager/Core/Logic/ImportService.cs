@@ -13,6 +13,10 @@ namespace Core.Logic
     /// </summary>
     public class ImportService
     {
+        /// <summary>
+        /// Generates Fake Schoolclasses including Students
+        /// </summary>
+        /// <returns></returns>
         public List<SchoolClass> ImportSchoolClasses()
         {
             List<Student> firstStudents = new List<Student>();
@@ -76,6 +80,52 @@ namespace Core.Logic
             #endregion
 
             return schoolClasses;
+        }
+        /// <summary>
+        /// Generates Fake Teachers
+        /// </summary>
+        /// <returns></returns>
+        public List<Teacher> ImportTeacher()
+        {
+            List<Teacher> teachers= new List<Teacher>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var fakeTeacher = new Faker<Teacher>()
+                .RuleFor(x => x.Name, x => x.Person.FullName)
+                .Generate();
+                fakeTeacher.Subjects = GetRandomSubjects(2);
+
+                teachers.Add(fakeTeacher);
+            }
+
+            return teachers;
+        }
+
+        /// <summary>
+        /// Get Random Subjects
+        /// </summary>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public List<Subject> GetRandomSubjects(int quantity)
+        {
+            String[] allSubjects = { "Mathematik", "Deutsch", "English", "Programmieren", "Datenbanken", "Netzwerktechnik", "Religion", "Recht", "Sport", "Geschichte" };
+            List<Subject> subjects= new List<Subject>();
+
+            for (int i = 0; i < quantity; i++)
+            {
+                var subject = new Subject();
+                subjects.Add(subject);
+            }
+
+            for (int i = 0; i < quantity; i++)
+            {
+                var rand = new Random();
+                var randomSubject = allSubjects[rand.Next(0,allSubjects.Length)];
+                subjects.ElementAt(i).Name = randomSubject;
+            }
+
+            return subjects;
         }
     }
 }

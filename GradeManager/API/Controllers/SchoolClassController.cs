@@ -1,5 +1,6 @@
-using Core.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 using Shared.Entities;
 
 namespace API.Controllers
@@ -9,20 +10,20 @@ namespace API.Controllers
     public class SchoolClassController : ControllerBase
     {
         private IConfiguration Config { get; }
-        private IUnitOfWork UnitOfWork { get; }
+        private ApplicationDbContext DbContext { get; }
         //private readonly ILogger<StudentsController> _logger;
 
-        public SchoolClassController(IConfiguration config, IUnitOfWork unitOfWork) : base()//ILogger<StudentsController> logger)
+        public SchoolClassController(IConfiguration config, ApplicationDbContext context) : base()//ILogger<StudentsController> logger)
         {
             //_logger = logger;
-            UnitOfWork = unitOfWork;
+            DbContext = context;
             Config = config;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SchoolClass>>> GetAll()
         {
-            var result = await UnitOfWork.SchoolClassRepository.GetAllAsync();
+            var result = await DbContext.SchoolClasses.ToListAsync();
 
             return Ok(result);
         }

@@ -1,4 +1,6 @@
 ﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 using Shared.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,11 +15,17 @@ namespace Core.Logic
     /// </summary>
     public class ImportService
     {
+        private ApplicationDbContext DbContext { get; }
+        public ImportService(ApplicationDbContext context)
+        {
+            DbContext = context;
+        }
+
         /// <summary>
         /// Generates Fake Schoolclasses including Students
         /// </summary>
         /// <returns></returns>
-        public List<SchoolClass> ImportSchoolClasses()
+        private List<SchoolClass> GenerateSchoolClasses()
         {
             List<Student> firstStudents = new List<Student>();
             List<Student> secondStudents = new List<Student>();
@@ -32,7 +40,7 @@ namespace Core.Logic
                 SchoolClass schoolClass = new SchoolClass
                 {
                     Name = $"{i}BHIF",
-                    SchoolLevel= i ,                  
+                    SchoolLevel = i,
                 };
                 schoolClasses.Add(schoolClass);
             }
@@ -81,20 +89,38 @@ namespace Core.Logic
 
             return schoolClasses;
         }
+
+        /// <summary>
+        /// Import Schoolclasses in Db
+        /// </summary>
+        /// <returns></returns>
+        public async Task ImportSchoolClassesAsync()
+        {
+            await DbContext.SchoolClasses.AddRangeAsync(GenerateSchoolClasses());
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task ImportTeachersAsync()
+        {
+            var teachers = await GenerateTeacherAsync();
+            await DbContext.Teachers.AddRangeAsync(teachers);
+            await DbContext.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Generates Fake Teachers
         /// </summary>
         /// <returns></returns>
-        public List<Teacher> ImportTeacher()
+        private async Task<List<Teacher>> GenerateTeacherAsync()
         {
-            List<Teacher> teachers= new List<Teacher>();
+            List<Teacher> teachers = new List<Teacher>();
 
             for (int i = 0; i < 5; i++)
             {
                 var fakeTeacher = new Faker<Teacher>()
                 .RuleFor(x => x.Name, x => x.Person.FullName)
                 .Generate();
-                fakeTeacher.Subjects = GetRandomSubjects(2);
+                fakeTeacher.Subjects = await GetRandomSubjectsAsync(2);
 
                 teachers.Add(fakeTeacher);
             }
@@ -107,19 +133,19 @@ namespace Core.Logic
         /// </summary>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public List<Subject> GetRandomSubjects(int quantity)
+        private async Task<List<Subject>> GetRandomSubjectsAsync(int quantity)
         {
-            String[] allSubjects = { "Mathematik", "Deutsch", "English", "Programmieren", "Datenbanken", "Netzwerktechnik", "Religion", "Recht", "Sport", "Geschichte" };
-            List<Subject> subjects = new List<Subject>();           
+            List<Subject> subjects = new List<Subject>();
 
+            var allSubjects = await DbContext.Subjects.ToArrayAsync();
             for (int i = 0; i < quantity; i++)
             {
                 var rand = new Random();
-                var randomSubject = allSubjects[rand.Next(0,allSubjects.Length)];
-                var contains = subjects.Find(subjects => subjects.Name == randomSubject);
+                var randomSubject = allSubjects[rand.Next(0, allSubjects.Length)].Name;
+                var contains = subjects.Find(s => s.Name == randomSubject);
                 if (contains == null)
                 {
-                    Subject subject= new Subject();
+                    Subject subject = new Subject();
                     subject.Name = randomSubject;
                     subjects.Add(subject);
                 }
@@ -130,6 +156,32 @@ namespace Core.Logic
             }
 
             return subjects;
+        }
+
+        /// <summary>
+        /// Import Subject in Db
+        /// </summary>
+        /// <returns></returns>
+        public async Task ImportSubjectsAsync()
+        {
+            var allSubjects = new List<Subject>
+            {
+                new Subject{Name = "Mathematik"},
+                new Subject{Name = "Deutsch" },
+                new Subject{Name = "English" },
+                new Subject{Name = "Programmieren"},
+                new Subject{Name = "Datenbanken"},
+                new Subject{Name = "Netzwerktechnik"},
+                new Subject{Name = "Religion"},
+                new Subject{Name = "Recht"},
+                new Subject{Name = "Sport"},
+                new Subject{Name = "Geschichte"}
+            };
+
+            await DbContext.Subjects.AddRangeAsync(allSubjects);
+
+            await DbContext.SaveChangesAsync();
+
         }
     }
 }

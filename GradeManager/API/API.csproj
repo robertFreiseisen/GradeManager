@@ -3,9 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <DebugType>portable</DebugType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>2fc39579-bb9e-4a80-a810-64f4bb2a5b47</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>

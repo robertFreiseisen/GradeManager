@@ -4,8 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>f6003b49-2b8d-48b7-9cff-f5b811b79696</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

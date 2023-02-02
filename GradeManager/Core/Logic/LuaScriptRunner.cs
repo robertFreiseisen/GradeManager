@@ -20,23 +20,21 @@ namespace Core.Logic
             this.state = new Lua();
         }
 
-        public Grade RunScript(GradeKey key)
+        public Grade RunScript(GradeKey key, List<Grade> grades)
         {
-            if (key.Calculation == string.Empty || key.UsedKinds == null)
+            if (key.Calculation == string.Empty || key.UsedKinds == null || grades == null)
             {
                 return null;
             }
 
             var code = key.Calculation;
 
-            if (CompareKindsAndScript(code, key.UsedKinds.ToList()))
-            {
-                return null;
-            }
             var result = new Grade();
             try
             {
                 state.DoString(code);
+                state.LoadCLRPackage();
+                state["grades"] = grades;
                 state.DoString(@"graduate = calculate()");
                 result.Teacher = key.Teacher;
                 var gr = state["graduate"];
@@ -52,19 +50,6 @@ namespace Core.Logic
             }
 
             return result;
-        }
-
-        private static bool CompareKindsAndScript(string? code, IList<GradeKind> gradeKinds)
-        {
-            foreach (var item in gradeKinds)
-            {
-                if (code!.Contains(item.Name))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

@@ -14,6 +14,9 @@ builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(_ => new UnitOfWork());
 builder.Services.AddTransient<LuaScriptRunner>();
 builder.Services.AddTransient<GradeCalculator>();
 
+//ImportService importService = new ImportService();
+//var schoolClasses = importService.ImportSchoolClasses();
+
 var app = builder.Build();
 
 var uow = app.Services.GetService<IUnitOfWork>()!;

@@ -110,19 +110,23 @@ namespace Core.Logic
         public List<Subject> GetRandomSubjects(int quantity)
         {
             String[] allSubjects = { "Mathematik", "Deutsch", "English", "Programmieren", "Datenbanken", "Netzwerktechnik", "Religion", "Recht", "Sport", "Geschichte" };
-            List<Subject> subjects= new List<Subject>();
-
-            for (int i = 0; i < quantity; i++)
-            {
-                var subject = new Subject();
-                subjects.Add(subject);
-            }
+            List<Subject> subjects = new List<Subject>();           
 
             for (int i = 0; i < quantity; i++)
             {
                 var rand = new Random();
                 var randomSubject = allSubjects[rand.Next(0,allSubjects.Length)];
-                subjects.ElementAt(i).Name = randomSubject;
+                var contains = subjects.Find(subjects => subjects.Name == randomSubject);
+                if (contains == null)
+                {
+                    Subject subject= new Subject();
+                    subject.Name = randomSubject;
+                    subjects.Add(subject);
+                }
+                else
+                {
+                    i--;
+                }
             }
 
             return subjects;

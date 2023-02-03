@@ -181,7 +181,31 @@ namespace Core.Logic
             await DbContext.Subjects.AddRangeAsync(allSubjects);
 
             await DbContext.SaveChangesAsync();
+        }
+        public async Task ImportGradesToStudentsAsync()
+        {
+            var schoolClasses = await DbContext.SchoolClasses.ToListAsync();
+            foreach (var schoolClass in schoolClasses)
+            {
+                foreach (var student in schoolClass.Students)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Grade grade = new Grade
+                        {
+                            GradeKind = new GradeKind { Name = "MAK" },
+                            Student = student,
+                            Note = "Testdaten",
+                            Subject = DbContext.Subjects.ElementAt(i),
+                            Teacher = DbContext.Teachers.ElementAt(i),
+                            Graduate = i
+                        };
+                        await DbContext.Grades.AddAsync(grade);
+                    }
+                }
+            }
 
+            await DbContext.SaveChangesAsync();
         }
     }
 }

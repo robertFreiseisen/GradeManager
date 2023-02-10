@@ -17,8 +17,7 @@ namespace Core.Logic
     {
         private readonly IUnitOfWork uow;
         private readonly LuaScriptRunner luaScriptRunner;
-
-        public GradeCalculator(IUnitOfWork uow, LuaScriptRunner luaScriptRunner)
+        public GradeCalculator(ApplicationDbContext context, LuaScriptRunner luaScriptRunner)
         {
             this.uow = uow;
             this.luaScriptRunner = luaScriptRunner;

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-
+using System.Runtime.CompilerServices;
 using Base.Helper;
 using Microsoft.EntityFrameworkCore;
 using Shared.Entities;

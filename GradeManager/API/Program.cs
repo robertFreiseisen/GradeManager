@@ -1,7 +1,8 @@
-using Core.Contracts;
 using Core.Logic;
-using NLua.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,14 +11,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>(_ => new UnitOfWork());
 builder.Services.AddTransient<LuaScriptRunner>();
+builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddTransient<GradeCalculator>();
+builder.Services.AddSingleton<ImportService>();
+builder.Services.AddSingleton<ApplicationDbContext>();
+
+//ImportService importService = new ImportService();
+//var schoolClasses = importService.ImportSchoolClasses();
 
 var app = builder.Build();
 
-var uow = app.Services.GetService<IUnitOfWork>()!;
-uow.MigrateDatabaseAsync().Wait();
+var context = app.Services.GetService<ApplicationDbContext>()!;
+await context.Database.MigrateAsync();
+
+var import = app.Services.GetService<ImportService>();
+await import!.ImportSubjectsAsync();
+await import!.ImportTeachersAsync();
+await import!.ImportSchoolClassesAsync();
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{

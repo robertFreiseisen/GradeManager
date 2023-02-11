@@ -1,11 +1,6 @@
-﻿using Core.Contracts;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Shared.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.Entities;
+using Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Logic
 {
@@ -15,17 +10,21 @@ namespace Core.Logic
     /// </summary>
     public class GradeCalculator
     {
-        private readonly IUnitOfWork uow;
+        private readonly ApplicationDbContext context;
         private readonly LuaScriptRunner luaScriptRunner;
+
         public GradeCalculator(ApplicationDbContext context, LuaScriptRunner luaScriptRunner)
         {
-            this.uow = uow;
+            this.context = context;
             this.luaScriptRunner = luaScriptRunner;
         }
 
-        public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject, IUnitOfWork uow)
+        public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject)
         {
-            var grades = await (uow.GradeRepository.GetByClassAndSubjectAsync(schoolClassId, subject));
+            var grades = await context.Grades
+                .Include(g => g.Subject)
+                .Include(g => g.Student)
+                .Where(g => g.SubjectId == subject && g.Student!.SchoolClassId == schoolClassId).ToListAsync();
 
             if (grades == null || grades.Count() == 0)
             {
@@ -33,7 +32,7 @@ namespace Core.Logic
             }
 
             var g1 = grades.First();
-            var key = await uow.GradeKeyRepository.GetByTeacherAndSubjectAsync(g1.TeacherId, g1.SubjectId);
+            var key = await context.GradeKeys.SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId);
 
             if (key == null)
             {

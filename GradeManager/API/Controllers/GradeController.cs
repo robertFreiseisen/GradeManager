@@ -1,6 +1,8 @@
-﻿using Core.Contracts;
+﻿using Core.ExtensionMethods;
 using Core.Logic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 using Shared.Entities;
 
 namespace API.Controllers
@@ -12,13 +14,13 @@ namespace API.Controllers
         private readonly GradeCalculator gradeCalculator;
 
         private IConfiguration Config { get; }
-        private IUnitOfWork UnitOfWork { get; }
+        private ApplicationDbContext DbContext { get; }
         //private readonly ILogger<StudentsController> _logger;
 
-        public GradeController(IConfiguration config, IUnitOfWork unitOfWork, GradeCalculator gradeCalculator) : base()//ILogger<StudentsController> logger)
+        public GradeController(IConfiguration config, ApplicationDbContext dbContext,  GradeCalculator gradeCalculator) : base()//ILogger<StudentsController> logger)
         {
             //_logger = logger;
-            UnitOfWork = unitOfWork;
+            DbContext = dbContext;
             this.gradeCalculator = gradeCalculator;
             Config = config;
         }
@@ -32,7 +34,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Grade>>> GetAllGradesAsync()
         {
-            var grades = await UnitOfWork.GradeRepository.GetAllAsync();
+            var grades = await DbContext.Grades.ToListAsync();
 
             return Ok(grades);
         }
@@ -42,7 +44,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Grade>>> CalculateGradesForClassAsync(int schoolClassId, int subjectId)
         {
-            var result = await gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId, UnitOfWork);
+            var result = await gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId);
             if (result == null)
             {
                 return BadRequest();
@@ -56,7 +58,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<GradeKey>>> GetAllGradeKeyAsync()
         {
-            var grades = await UnitOfWork.GradeKeyRepository.GetAllAsync();
+            var grades = await DbContext.GradeKeys!.ToListAsync();
 
             return Ok(grades);
         }
@@ -71,7 +73,7 @@ namespace API.Controllers
                 return BadRequest("Grade Key Required");
             }
 
-            var gradeKeyDb = await UnitOfWork.GradeKeyRepository.GetByIdAsync(gradeKey.Id);
+            var gradeKeyDb = await DbContext.GradeKeys.GetByIdAsync(gradeKey.Id);
 
             if (gradeKeyDb == null)
             {
@@ -84,7 +86,7 @@ namespace API.Controllers
 
             try
             {
-                await UnitOfWork.SaveChangesAsync();
+                await DbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -116,8 +118,8 @@ namespace API.Controllers
 
             try
             {
-                await UnitOfWork.GradeRepository.AddGradeKeyAsync(keyToAdd);
-                await UnitOfWork.SaveChangesAsync();
+                await DbContext.GradeKeys.AddAsync(keyToAdd);
+                await DbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

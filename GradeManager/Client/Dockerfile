@@ -10,6 +10,9 @@ COPY ["Shared/Shared.csproj", "Shared/"]
 RUN dotnet restore "Client/Client.csproj"
 COPY . .
 WORKDIR "/src/Client"
+RUN apt-get update
+RUN apt-get install -y procps
+RUN apt-get install -y unzip
 RUN dotnet build "Client.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -1,24 +1,25 @@
 ﻿@page "/fileupload"
 
+@using System.Net.Http.Headers;
+@using global::Shared.Entities;
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
 
 <h3>Upload your code as a file!</h3>
 
 <div @ref="fileDropContainer" class="file-drop-zone @HoverClass" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter">
-    <InputFile OnChange="@OnChange" @ref="inputFile" multiple/>
+    <InputFile OnChange="@OnChange"  multiple/>
 </div>
 
 <div class="error-message-container">
     <p>@ErrorMessage</p>
 </div>
 
-<div class="image-container">
-    @foreach (var imageSource in imageSources)
-    {
-        <img src="@imageSource" />
-    }
-</div>
+<EditForm Model="@stringCode">
+    <InputTextArea @bind-Value="stringCode" readonly />
+</EditForm>
+
+
 
 @code {
     private string HoverClass = string.Empty;
@@ -27,8 +28,9 @@
     IJSObjectReference? _filePasteModule = default(IJSObjectReference);
     IJSObjectReference? _filePasteFunctionReference = default(IJSObjectReference);
     ElementReference fileDropContainer;
-    InputFile? inputFile;
-    private List<string> imageSources = new List<string>();
+    IBrowserFile? file;
+    ScriptType scriptType; 
+    string stringCode = string.Empty;
     private string ErrorMessage = string.Empty;
     private const int maxAllowedFiles = 1;
 
@@ -45,21 +47,22 @@
         }
     }
 
-    
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         
         if(firstRender)
         {
             _filePasteModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/filePaste.js");
-            _filePasteFunctionReference = await _filePasteModule.InvokeAsync<IJSObjectReference>("initializeFilePaste", fileDropContainer, inputFile);
+            _filePasteFunctionReference = await _filePasteModule.InvokeAsync<IJSObjectReference>("initializeFilePaste", fileDropContainer, file);
         }
     }
     
     async Task OnChange(InputFileChangeEventArgs e)
     {
-        imageSources.Clear();
+        stringCode = string.Empty;
         ErrorMessage = string.Empty;
+
+        using var content = new MultipartFormDataContent();
 
         if (e.FileCount > maxAllowedFiles)
         {
@@ -67,15 +70,42 @@
             return;
         }
 
+        
         foreach (var file in e.GetMultipleFiles())
         {
-            using var stream = file.OpenReadStream();
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            imageSources.Add($"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}");
+            var isAllowed = false;
+            var fileContent = new StreamContent(file.OpenReadStream());
+
+            switch (file.Name.Split('.')[1])
+            {
+                case "lua":
+                    scriptType = ScriptType.Lua; 
+                    isAllowed = true;
+                    break;
+                case "py":
+                    scriptType = ScriptType.Python;
+                    isAllowed = true;
+                    break;
+                case "cs":
+                    scriptType = ScriptType.CSharpScript;
+                    isAllowed = true;
+                    break;
+                case "js":
+                    isAllowed = true;
+                    scriptType = ScriptType.JavaScript;
+                    break;
+                default:
+                    ErrorMessage = "Content Type not sopported";
+                    break;
+            }
+
+            if (isAllowed)
+            {
+                stringCode = await fileContent.ReadAsStringAsync();
+            }
+            
         }
     }
-
     
 }
 

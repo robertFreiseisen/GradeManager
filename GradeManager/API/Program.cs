@@ -1,6 +1,8 @@
+using API.Controllers;
 using Core.Logic;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Shared.Entities;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 

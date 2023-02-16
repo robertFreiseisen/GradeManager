@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{A95CFF36-2CB8-46BE-8868-D4B34A23A9DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculationTests", "CalculationTests\CalculationTests.csproj", "{56EEE755-F26B-4B71-B80E-D5FD4A9901B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculationTests", "CalculationTests\CalculationTests.csproj", "{56EEE755-F26B-4B71-B80E-D5FD4A9901B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

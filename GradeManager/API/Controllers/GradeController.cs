@@ -8,15 +8,13 @@ using Shared.Entities;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/grades")]
+    [Route("/grades")]
     public class GradeController : ControllerBase
     {
         private readonly GradeCalculator gradeCalculator;
-
         private IConfiguration Config { get; }
         private ApplicationDbContext DbContext { get; }
         //private readonly ILogger<StudentsController> _logger;
-
         public GradeController(IConfiguration config, ApplicationDbContext dbContext,  GradeCalculator gradeCalculator) : base()//ILogger<StudentsController> logger)
         {
             //_logger = logger;
@@ -25,10 +23,6 @@ namespace API.Controllers
             Config = config;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,6 +31,31 @@ namespace API.Controllers
             var grades = await DbContext.Grades.ToListAsync();
 
             return Ok(grades);
+        }
+        
+        [HttpPost("/addKey")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> AddGradeKeyAsync(GradeKey key)
+        {
+            var dbKey = await DbContext.GradeKeys.SingleOrDefaultAsync(k => k.Name == key.Name && k.TeacherId == key.TeacherId);
+            
+            if (dbKey == null)
+            {
+                return BadRequest($"GradeKey {key.Name} already exists!");    
+            }
+
+            try
+            {
+                await DbContext.GradeKeys.AddAsync(key);
+                await DbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                
+                return BadRequest(e.Message);
+            }
+            return Ok();
         }
 
         [HttpGet("/calcForClass")]
@@ -59,6 +78,16 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<GradeKey>>> GetAllGradeKeyAsync()
         {
             var grades = await DbContext.GradeKeys!.ToListAsync();
+
+            return grades;
+        }
+
+        [HttpGet("/kinds")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<GradeKind>>> GetAllKindsAsync()
+        {
+            var grades = await DbContext.GradeKinds!.ToListAsync();
 
             return Ok(grades);
         }

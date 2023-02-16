@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace Shared.Entities
 {
+    [Serializable()]
     public class Teacher : EntityObject
     {
         [Required]
         public string Name { get; set; }
-        public IEnumerable<GradeKey>? GradeKeys { get; set; }
-        public IEnumerable<Subject> Subjects { get; set; }
-        public IEnumerable<SchoolClass>? SchoolClasses { get; set; }
+        public List<GradeKey>? GradeKeys { get; set; }
+
+        public List<Subject> Subjects { get; set; }
+        public List<SchoolClass>? SchoolClasses { get; set; }
     }
 }

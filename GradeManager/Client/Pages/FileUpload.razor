@@ -1,9 +1,12 @@
 ﻿@page "/fileupload"
 
-@using System.Net.Http.Headers;
+@using Client.Services;
 @using global::Shared.Entities;
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
+@inject ISubjectService SubjectService;
+@inject IGradeService GradeService;
+@inject IKindService KindService;
 
 <h3>Upload your code as a file!</h3>
 
@@ -11,17 +14,31 @@
     <InputFile OnChange="@OnChange"  multiple/>
 </div>
 
+<select class="form-control" @bind="@selectedSubject">
+
+        @foreach (var item in @KindService.GradeKinds)
+        {
+            <option value="@item.Name"> @item.Name </option>
+        }
+</select>
+
 <div class="error-message-container">
     <p>@ErrorMessage</p>
+</div>
+
+<div>
+    <button type="submit" @onclick="AddGradeKeyAsync">
+        Add
+    </button>
 </div>
 
 <EditForm Model="@stringCode">
     <InputTextArea @bind-Value="stringCode" readonly />
 </EditForm>
 
-
-
-@code {
+@code 
+{
+    private GradeKind selectedSubject = new GradeKind();
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
     void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
@@ -33,7 +50,36 @@
     string stringCode = string.Empty;
     private string ErrorMessage = string.Empty;
     private const int maxAllowedFiles = 1;
+    private int _userId = 1;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await KindService.GetAllKindsAsync();
+        }
+
+        catch(Exception e)
+        {
+            throw;
+        }
+    }
+    private async Task AddGradeKeyAsync()
+    {
+        if(stringCode == string.Empty)
+        {
+            ErrorMessage = "Script is needed!";
+        }
+
+        await GradeService.CreateGradeKeyAsync(
+            new GradeKey 
+            { 
+                ScriptType = scriptType, 
+                TeacherId = _userId, 
+                SubjectId = selectedSubject!.Id,
+                Calculation = stringCode
+            });
+    }
     public async ValueTask DisposeAsync()
     {
         if (_filePasteFunctionReference != null)
@@ -48,8 +94,7 @@
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        
+    {   
         if(firstRender)
         {
             _filePasteModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/filePaste.js");
@@ -105,8 +150,7 @@
             }
             
         }
-    }
-    
+    }    
 }
 
 

@@ -25,7 +25,9 @@ builder.Services.AddSingleton<ApplicationDbContext>();
 var app = builder.Build();
 
 var context = app.Services.GetService<ApplicationDbContext>()!;
-await context.Database.MigrateAsync();
+await context.Database.EnsureDeletedAsync();
+await context.Database.EnsureCreatedAsync();
+//await context.Database.MigrateAsync();
 
 var import = app.Services.GetService<ImportService>();
 await import!.ImportSubjectsAsync();

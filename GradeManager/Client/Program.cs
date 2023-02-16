@@ -10,7 +10,7 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.De
 builder.Services.AddScoped(_ => new HttpClient{ BaseAddress = new Uri("http://grades_backend/")});
 builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
-builder.Services.AddScoped<IKindService, KindService>();
+
 //builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddRouting();
 

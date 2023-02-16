@@ -6,7 +6,6 @@
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
 @inject IGradeService GradeService;
-@inject IKindService KindService;
 
 <h3>Upload your code as a file!</h3>
 
@@ -16,10 +15,14 @@
 
 <select class="form-control" @bind="@selectedSubject">
 
-        @foreach (var item in @KindService.GradeKinds)
+        @foreach (var item in @SubjectService.Subjects)
         {
-            <option value="@item.Name"> @item.Name </option>
+            <option value="@item.Id"> @item.Name </option>
         }
+</select>
+
+<select class="form-control" @>
+
 </select>
 
 <div class="error-message-container">
@@ -38,7 +41,7 @@
 
 @code 
 {
-    private GradeKind selectedSubject = new GradeKind();
+    private int selectedSubject;
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
     void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
@@ -56,7 +59,7 @@
     {
         try
         {
-            await KindService.GetAllKindsAsync();
+            await SubjectService.GetSubjectsByTeacherAsync(_userId);
         }
 
         catch(Exception e)
@@ -76,7 +79,7 @@
             { 
                 ScriptType = scriptType, 
                 TeacherId = _userId, 
-                SubjectId = selectedSubject!.Id,
+                SubjectId = selectedSubject,
                 Calculation = stringCode
             });
     }

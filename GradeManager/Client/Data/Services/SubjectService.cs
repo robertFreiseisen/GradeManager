@@ -36,10 +36,8 @@ namespace Client.Data.Services
 
             var result = await _http.GetFromJsonAsync<List<Subject>>($"teacher/{teacherId}");
 
-            if (result != null)
-            {
+            if(result != null)
                 Subjects = result;
-            }
         }
     }
 }

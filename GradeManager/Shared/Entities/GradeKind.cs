@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Entities
 {
+    [Serializable]
     public class GradeKind : EntityObject
     {
         public string Name { get; set; }

@@ -182,12 +182,20 @@ namespace Core.Logic
 
             await DbContext.SaveChangesAsync();
         }
+        /// <summary>
+        /// Import Grades to Students in db
+        /// </summary>
+        /// <returns></returns>
         public async Task ImportGradesToStudentsAsync()
         {
-            var schoolClasses = await DbContext.SchoolClasses.ToListAsync();
+            var schoolClasses = await DbContext.SchoolClasses.Include(s => s.Students).ToListAsync();
+            var subjects = await DbContext.Subjects.ToListAsync();
+            var teachers = await DbContext.Teachers.ToListAsync();
+
             foreach (var schoolClass in schoolClasses)
             {
-                foreach (var student in schoolClass.Students)
+                var studentsFromClass = schoolClass.Students.ToList();
+                foreach (var student in studentsFromClass)
                 {
                     for (int i = 0; i < 5; i++)
                     {
@@ -196,9 +204,9 @@ namespace Core.Logic
                             GradeKind = new GradeKind { Name = "MAK" },
                             Student = student,
                             Note = "Testdaten",
-                            Subject = DbContext.Subjects.ElementAt(i),
-                            Teacher = DbContext.Teachers.ElementAt(i),
-                            Graduate = i
+                            Subject = subjects.ElementAt(i),
+                            Teacher = teachers.ElementAt(i),
+                            Graduate = i + 1
                         };
                         await DbContext.Grades.AddAsync(grade);
                     }

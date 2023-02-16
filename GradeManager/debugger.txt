@@ -1,0 +1,5 @@
+API/appsettings.json
+"DockerConnection": "Host=localhost:5432;UserID=postgres;Password=postgres;Port=5432;Database=grade_db;Integrated Security=true;Pooling=true;"
+
+ApplicationDbContext:
+string connectionString = configuration["ConnectionStrings:DockerConnection"];

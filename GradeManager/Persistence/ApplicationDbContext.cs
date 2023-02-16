@@ -29,6 +29,8 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<GradeKey>().HasMany<GradeKind>(key => key.UsedKinds)
+            .WithMany(kind => kind.GradeKeys);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

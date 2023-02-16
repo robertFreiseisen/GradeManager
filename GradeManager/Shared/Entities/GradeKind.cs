@@ -10,6 +10,7 @@ namespace Shared.Entities
     [Serializable]
     public class GradeKind : EntityObject
     {
+        public List<GradeKey> GradeKeys { get; set; } 
         public string Name { get; set; }
     }
 }

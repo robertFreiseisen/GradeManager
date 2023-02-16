@@ -5,7 +5,9 @@ namespace Client.Services
     public interface IGradeService
     {
         Task GetAllGradesAsync();
+        Task GetAllKindsAsync();
         public List<Grade> Grades { get; set;}
+        public List<GradeKind> Kinds { get; set; }
         public List<SchoolClass> Schooclasses { get; set; }
         public List<GradeKey> GradeKeys { get; set; }
         //Task CreateGradeAsync(Grade grade);

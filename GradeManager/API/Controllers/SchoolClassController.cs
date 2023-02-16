@@ -6,7 +6,7 @@ using Shared.Entities;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("/schoolclasses")]
     public class SchoolClassController : ControllerBase
     {
         private IConfiguration Config { get; }

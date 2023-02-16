@@ -204,7 +204,7 @@ namespace Core.Logic
                     {
                         Grade grade = new Grade
                         {
-                            GradeKind = new GradeKind { Name = "MAK" },
+                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "MAK"),
                             Student = student,
                             Note = "Testdaten",
                             Subject = subjects.ElementAt(i),

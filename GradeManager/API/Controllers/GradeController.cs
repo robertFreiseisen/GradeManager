@@ -40,7 +40,7 @@ namespace API.Controllers
         {
             var dbKey = await DbContext.GradeKeys.SingleOrDefaultAsync(k => k.Name == key.Name && k.TeacherId == key.TeacherId);
             
-            if (dbKey == null)
+            if (dbKey != null)
             {
                 return BadRequest($"GradeKey {key.Name} already exists!");    
             }
@@ -87,7 +87,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<GradeKind>>> GetAllKindsAsync()
         {
-            var grades = await DbContext.GradeKinds!.ToListAsync();
+            var grades = await DbContext.GradeKinds.ToListAsync();
 
             return Ok(grades);
         }
@@ -141,6 +141,7 @@ namespace API.Controllers
                 {
                     TeacherId = gradeKeyPostDto.TeacherId,
                     Name = gradeKeyPostDto.Name,
+                    UsedKinds = gradeKeyPostDto.UsedKinds,
                     ScriptType = gradeKeyPostDto.ScriptType,
                     Calculation = gradeKeyPostDto.Calculation
                 };

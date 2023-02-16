@@ -59,6 +59,7 @@
     {
         try
         {
+            await GradeService.GetAllKindsAsync();
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
         }
 
@@ -78,6 +79,7 @@
             new GradeKey 
             { 
                 ScriptType = scriptType, 
+                Name = "test",
                 TeacherId = _userId, 
                 SubjectId = selectedSubject,
                 Calculation = stringCode

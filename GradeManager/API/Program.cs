@@ -14,7 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<LuaScriptRunner>();
-builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(x =>
+{
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; 
+    
+});
 builder.Services.AddTransient<GradeCalculator>();
 builder.Services.AddSingleton<ImportService>();
 builder.Services.AddSingleton<ApplicationDbContext>();

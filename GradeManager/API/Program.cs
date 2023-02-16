@@ -29,6 +29,7 @@ var import = app.Services.GetService<ImportService>();
 await import!.ImportSubjectsAsync();
 await import!.ImportTeachersAsync();
 await import!.ImportSchoolClassesAsync();
+await import!.ImportGradeKindsAsync();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

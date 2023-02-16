@@ -99,7 +99,10 @@ namespace Core.Logic
             await DbContext.SchoolClasses.AddRangeAsync(GenerateSchoolClasses());
             await DbContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Import Teachers in Db
+        /// </summary>
+        /// <returns></returns>
         public async Task ImportTeachersAsync()
         {
             var teachers = await GenerateTeacherAsync();
@@ -159,7 +162,7 @@ namespace Core.Logic
         }
 
         /// <summary>
-        /// Import Subject in Db
+        /// Import Subjects in Db
         /// </summary>
         /// <returns></returns>
         public async Task ImportSubjectsAsync()
@@ -183,5 +186,21 @@ namespace Core.Logic
             await DbContext.SaveChangesAsync();
 
         }
+        /// <summary>
+        /// Generate Different GradeKinds and import in Db
+        /// </summary>
+        /// <returns></returns>
+        public async Task ImportGradeKindsAsync()
+        {
+            var gradeKinds = new List<GradeKind>
+            {
+                new GradeKind{Name = "MAK"},
+                new GradeKind{Name = "TEST"},
+                new GradeKind{Name = "HOMEWORK"}
+            };
+
+            await DbContext.GradeKinds.AddRangeAsync(gradeKinds);
+            await DbContext.SaveChangesAsync();
+        }       
     }
 }

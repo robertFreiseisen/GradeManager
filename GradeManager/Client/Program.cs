@@ -12,6 +12,7 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.De
 
 builder.Services.AddHttpClient<IGradeService, GradeService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddHttpClient<SchoolCLassService, SchoolCLassService>();
 builder.Services.AddRouting();
 
 var app = builder.Build();

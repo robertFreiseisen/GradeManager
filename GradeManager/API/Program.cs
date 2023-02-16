@@ -1,6 +1,8 @@
+using API.Controllers;
 using Core.Logic;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Shared.Entities;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 
@@ -23,13 +25,16 @@ builder.Services.AddSingleton<ApplicationDbContext>();
 var app = builder.Build();
 
 var context = app.Services.GetService<ApplicationDbContext>()!;
-await context.Database.MigrateAsync();
+await context.Database.EnsureDeletedAsync();
+await context.Database.EnsureCreatedAsync();
+//await context.Database.MigrateAsync();
 
 var import = app.Services.GetService<ImportService>();
 await import!.ImportSubjectsAsync();
 await import!.ImportTeachersAsync();
 await import!.ImportSchoolClassesAsync();
 await import!.ImportGradeKindsAsync();
+await import!.ImportGradesToStudentsAsync();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

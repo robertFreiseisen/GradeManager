@@ -99,7 +99,10 @@ namespace Core.Logic
             await DbContext.SchoolClasses.AddRangeAsync(GenerateSchoolClasses());
             await DbContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Import Teachers in Db
+        /// </summary>
+        /// <returns></returns>
         public async Task ImportTeachersAsync()
         {
             var teachers = await GenerateTeacherAsync();
@@ -159,7 +162,7 @@ namespace Core.Logic
         }
 
         /// <summary>
-        /// Import Subject in Db
+        /// Import Subjects in Db
         /// </summary>
         /// <returns></returns>
         public async Task ImportSubjectsAsync()
@@ -181,7 +184,55 @@ namespace Core.Logic
             await DbContext.Subjects.AddRangeAsync(allSubjects);
 
             await DbContext.SaveChangesAsync();
-
         }
+        /// <summary>
+        /// Import Grades to Students in db
+        /// </summary>
+        /// <returns></returns>
+        public async Task ImportGradesToStudentsAsync()
+        {
+            var schoolClasses = await DbContext.SchoolClasses.Include(s => s.Students).ToListAsync();
+            var subjects = await DbContext.Subjects.ToListAsync();
+            var teachers = await DbContext.Teachers.ToListAsync();
+
+            foreach (var schoolClass in schoolClasses)
+            {
+                var studentsFromClass = schoolClass.Students.ToList();
+                foreach (var student in studentsFromClass)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Grade grade = new Grade
+                        {
+                            GradeKind = new GradeKind { Name = "MAK" },
+                            Student = student,
+                            Note = "Testdaten",
+                            Subject = subjects.ElementAt(i),
+                            Teacher = teachers.ElementAt(i),
+                            Graduate = i + 1
+                        };
+                        await DbContext.Grades.AddAsync(grade);
+                    }
+                }
+            }
+
+            await DbContext.SaveChangesAsync();
+        }
+        /// <summary>
+        /// Generate Different GradeKinds and import in Db
+        /// </summary>
+        /// <returns></returns>
+        public async Task ImportGradeKindsAsync()
+        {
+            var gradeKinds = new List<GradeKind>
+            {
+                new GradeKind{Name = "MAK"},
+                new GradeKind{Name = "TEST"},
+                new GradeKind{Name = "HOMEWORK"}
+            };
+
+            await DbContext.GradeKinds.AddRangeAsync(gradeKinds);
+            await DbContext.SaveChangesAsync();
+        }       
     }
 }

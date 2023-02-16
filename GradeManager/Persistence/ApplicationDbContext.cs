@@ -29,7 +29,6 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

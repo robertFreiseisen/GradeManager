@@ -15,7 +15,7 @@ services:
           retries: 55
     
   grades_backend:
-    container_name: grades_backend
+    container_name: ${DOCKER_REGISTRY-}grades_backend
     image: grades_backend
     privileged: true
     ports:

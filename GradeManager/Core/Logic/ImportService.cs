@@ -143,8 +143,8 @@ namespace Core.Logic
             var allSubjects = await DbContext.Subjects.ToArrayAsync();
             for (int i = 0; i < quantity; i++)
             {
-                var rand = new Random();
-                var randomSubject = allSubjects[rand.Next(0, allSubjects.Length)].Name;
+                //var rand = new Random();
+                var randomSubject = allSubjects[Random.Shared.Next(0, allSubjects.Length)].Name;
                 var contains = subjects.Find(s => s.Name == randomSubject);
                 if (contains == null)
                 {

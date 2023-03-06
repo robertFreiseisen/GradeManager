@@ -8,13 +8,27 @@ namespace API.Profiles
     {
         public StudentProfile()
         {
-            CreateMap<StudentPostDto, Student>()
+            CreateMap<StudentPostDto, Student>().DisableCtorValidation()
                 .ForMember(
-                    dest => dest.Id, 
+                    dest => dest.Id,
                     opt => opt.MapFrom(src => 0))
                 .ForMember(
-                    dest => dest.SchoolClassId, 
-                    opt => opt.MapFrom(src => src.SchoolClassId));
+                    dest => dest.SchoolClassId,
+                    opt => opt.MapFrom(src => src.SchoolClassId))
+                .ForMember(
+                    dest => dest.Name,
+                    opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<Student, StudentGetDto>().DisableCtorValidation()
+                .ForMember(
+                    dest => dest.Id,
+                    opt => opt.MapFrom(src => src.Id))
+                .ForMember(
+                    dest => dest.SchoolClassId,
+                    opt => opt.MapFrom(src => src.SchoolClassId))
+                .ForMember(
+                    dest => dest.Name,
+                    opt => opt.MapFrom(src => src.Name));
         }
     }
 }

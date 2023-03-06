@@ -1,8 +1,5 @@
-using Client;
 using Client.Data.Services;
 using Client.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
-builder.Services.AddHttpClient<IGradeService, GradeService>();
+builder.Services.AddScoped(_ => new HttpClient{ BaseAddress = new Uri("http://grades_backend/")});
+builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
-builder.Services.AddHttpClient<SchoolCLassService, SchoolCLassService>();
+
+builder.Services.AddScoped<SchoolCLassService, SchoolCLassService>();
+
 builder.Services.AddRouting();
 
 var app = builder.Build();

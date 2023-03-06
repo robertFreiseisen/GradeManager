@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Entities
 {
+    [Serializable()]
     public class Grade : EntityObject 
     {
         [ForeignKey("Student")]
@@ -38,6 +39,7 @@ namespace Shared.Entities
         [ForeignKey("GradeKind")]
         [Required]
         public int GradeKindId { get; set; }
+        [Required]
         public GradeKind GradeKind { get; set; } // Test oder MAK, Hausuebung
     }
 }

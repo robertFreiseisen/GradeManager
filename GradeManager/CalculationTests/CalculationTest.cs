@@ -56,5 +56,24 @@ namespace CalculationTests
             Assert.AreEqual(3, result.Graduate, "Calculation is right");
 
         }
+
+        [TestMethod]
+        public void JavaScriptTest()
+        {
+            var gradeKinds = new List<GradeKind>
+            {
+                new GradeKind { Name = "MAK" },
+                new GradeKind { Name = "TEST" },
+                new GradeKind { Name = "HOMEWORK"}
+            };
+
+            var code = File.ReadAllText("D:/GithubRepos/GradeManager/GradeManager/CalculationTests/test.js");
+            var key = new GradeKey { Name = "JavascriptTest", UsedKinds = gradeKinds, Calculation = code };
+
+            var runner = new JavascriptRunner();
+            var result = runner.RunScript(key);
+
+            Assert.AreEqual(3, result.Graduate, "Calculation is right");
+        }
     }
 }

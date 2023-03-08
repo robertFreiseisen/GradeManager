@@ -2,7 +2,9 @@
 
 @using Client.Services;
 @using global::Shared.Entities;
+
 @using global::Shared.Dtos;
+
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
@@ -38,6 +40,7 @@
 
 <EditForm Model="@stringCode">
     <InputTextArea @bind-Value="stringCode" readonly style="will-change: auto;"/>
+
 </EditForm>
 
 @code 
@@ -75,7 +78,7 @@
         {
             ErrorMessage = "Script is needed!";
         }
-
+        
         var kinds = GradeService.Kinds.Select(k => new GradeKindPostDto { Name = k.Name }).ToList();
         await GradeService.CreateGradeKeyAsync(
             new GradeKeyPostDto 

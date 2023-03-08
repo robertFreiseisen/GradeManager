@@ -17,6 +17,13 @@ namespace Client.Data.Services
         public List<SchoolClassGetDto> Schooclasses { get; set;} = new List<SchoolClassGetDto>();
         public List<GradeGetDto> Grades { get; set; } = new List<GradeGetDto>();
         public List<GradeKindGetDto> Kinds { get; set; } = new List<GradeKindGetDto>();
+
+        public List<GradeKey> GradeKeys { get; set; } = new List<GradeKey>();
+        public List<SchoolClass> Schooclasses { get; set;} = new List<SchoolClass>();
+        public List<Grade> Grades { get; set; } = new List<Grade>();
+        public List<GradeKind> Kinds { get; set; } = new List<GradeKind>();
+
+
         public async Task CreateGradeAsync(Grade grade)
         {
             var result = await _http.PostAsJsonAsync("/grades", grade);
@@ -36,7 +43,9 @@ namespace Client.Data.Services
 
         private async Task SetKey(HttpResponseMessage result)
         {
+
             var res = await result.Content.ReadFromJsonAsync<GradeKeyGetDto>();                
+
             GradeKeys.Add(res!);
         }
 
@@ -47,6 +56,7 @@ namespace Client.Data.Services
 
         public async Task GetAllGradeKeysAsync()
         {
+
             var result = await _http.GetFromJsonAsync<List<GradeKeyGetDto>>("/keys");
             if (result != null)
             {
@@ -68,7 +78,9 @@ namespace Client.Data.Services
 
         public async Task GetAllSchoolclassesAsync()
         {
+
             var schoolclasses = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>("http://grades_backend/api/SchoolClass/GetAll");
+
             if (schoolclasses != null)
             {
                 Schooclasses = schoolclasses;
@@ -76,7 +88,9 @@ namespace Client.Data.Services
         }
         public async Task GetAllGradesAsync()
         {
+
             var result = await _http.GetFromJsonAsync<List<GradeGetDto>>("http://grades_backend/grades");
+
             if (result != null)
             {
                 Grades = result;
@@ -85,7 +99,9 @@ namespace Client.Data.Services
 
         public async Task GetAllKindsAsync()
         {
+
             var result = await _http.GetFromJsonAsync<List<GradeKindGetDto>>("/kinds");
+
 
             if (result != null)
             {

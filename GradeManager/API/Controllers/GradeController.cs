@@ -28,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         /// <summary>
@@ -44,6 +45,7 @@ namespace API.Controllers
         }
         
         [HttpPost("/addKey")]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         /// <summary>
@@ -70,6 +72,31 @@ namespace API.Controllers
             }
             catch (Exception e)
             {                
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+        
+        [HttpPost("/addKey")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> AddGradeKeyAsync(GradeKey key)
+        {
+            var dbKey = await DbContext.GradeKeys.SingleOrDefaultAsync(k => k.Name == key.Name && k.TeacherId == key.TeacherId);
+            
+            if (dbKey != null)
+            {
+                return BadRequest($"GradeKey {key.Name} already exists!");    
+            }
+
+            try
+            {
+                await DbContext.GradeKeys.AddAsync(key);
+                await DbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                
                 return BadRequest(e.Message);
             }
             return Ok();
@@ -125,7 +152,9 @@ namespace API.Controllers
             var gradeKinds = await DbContext.GradeKinds.ToListAsync();
             var result = gradeKinds.Select(kind => _mapper.Map<GradeKindGetDto>(kind));
             return Ok(result);
+            return grades;
         }
+
 
         [HttpPut("/keys")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -181,6 +210,7 @@ namespace API.Controllers
             {
                 try
                 {
+
                     await DbContext.GradeKinds.AddRangeAsync(kindsToAdd);   
                     await DbContext.SaveChangesAsync();   
                 }
@@ -190,6 +220,7 @@ namespace API.Controllers
                     throw;
                 }
             }
+
 
             var keyToAdd = _mapper.Map<GradeKey>(gradeKeyPostDto);
             try

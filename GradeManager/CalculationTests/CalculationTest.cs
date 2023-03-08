@@ -67,7 +67,7 @@ namespace CalculationTests
                 new GradeKind { Name = "HOMEWORK"}
             };
 
-            var code = File.ReadAllText("D:/GithubRepos/GradeManager/GradeManager/CalculationTests/test.js");
+            var code = File.ReadAllText("test.js");
             var key = new GradeKey { Name = "JavascriptTest", UsedKinds = gradeKinds, Calculation = code };
 
             var runner = new JavascriptRunner();

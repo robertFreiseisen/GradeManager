@@ -13,14 +13,14 @@ namespace Shared.Entities
         JavaScript,
         CSharpScript
     }
+    [Serializable]
     public class GradeKey : EntityObject
     {
         public string? Calculation { get; set; }
         [ForeignKey("Teacher")]
-        [Required]
         public int TeacherId { get; set; }
         public Teacher? Teacher { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }

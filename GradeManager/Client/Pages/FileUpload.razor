@@ -2,6 +2,7 @@
 
 @using Client.Services;
 @using global::Shared.Entities;
+@using global::Shared.Dtos;
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
@@ -36,12 +37,12 @@
 </div>
 
 <EditForm Model="@stringCode">
-    <InputTextArea @bind-Value="stringCode" readonly />
+    <InputTextArea @bind-Value="stringCode" readonly style="will-change: auto;"/>
 </EditForm>
 
 @code 
 {
-    private int selectedSubject;
+    private int selectedSubject = 1;
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
     void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
@@ -59,6 +60,7 @@
     {
         try
         {
+            await GradeService.GetAllKindsAsync();
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
         }
 
@@ -74,14 +76,19 @@
             ErrorMessage = "Script is needed!";
         }
 
-        await GradeService.CreateGradeKeyAsync(
-            new GradeKey 
+        var kinds = GradeService.Kinds.Select(k => new GradeKindPostDto { Name = k.Name }).ToList();
+
+        var key = new GradeKeyPostDto 
             { 
-                ScriptType = scriptType, 
+                Name = "test_lua", 
+                UsedKinds = kinds,
                 TeacherId = _userId, 
-                SubjectId = selectedSubject,
-                Calculation = stringCode
-            });
+                SubjectId = selectedSubject, 
+                ScriptType = scriptType, 
+                Calculation = stringCode 
+            };
+
+        await GradeService.CreateGradeKeyAsync(key);
     }
     public async ValueTask DisposeAsync()
     {
@@ -124,21 +131,22 @@
             var isAllowed = false;
             var fileContent = new StreamContent(file.OpenReadStream());
 
-            switch (file.Name.Split('.')[1])
+            var info = new FileInfo(file.Name);
+            switch (info.Extension)
             {
-                case "lua":
+                case ".lua":
                     scriptType = ScriptType.Lua; 
                     isAllowed = true;
                     break;
-                case "py":
+                case ".py":
                     scriptType = ScriptType.Python;
                     isAllowed = true;
                     break;
-                case "cs":
+                case ".csc":
                     scriptType = ScriptType.CSharpScript;
                     isAllowed = true;
                     break;
-                case "js":
+                case ".js":
                     isAllowed = true;
                     scriptType = ScriptType.JavaScript;
                     break;
@@ -151,7 +159,6 @@
             {
                 stringCode = await fileContent.ReadAsStringAsync();
             }
-            
         }
     }    
 }

@@ -46,11 +46,3 @@ services:
        dockerfile: ./Client/Dockerfile
     depends_on: 
       - grades_backend
-
-
-
-
-
-
-      
-      

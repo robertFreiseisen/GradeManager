@@ -1,6 +1,6 @@
 ﻿@page "/scriptInput/{id?}"
 @using Client.Services;
-@using global::Shared.Entities;
+@using global::Shared.Dtos;
 @inject IGradeService GradeService;
 
 
@@ -15,7 +15,7 @@
 
     [Parameter]
     public int? Id { get; set; }
-    public GradeKey? Key { get; set; }
+    public GradeKeyGetDto? Key { get; set; }
     string script = string.Empty;
 
     protected override void OnInitialized()
@@ -24,7 +24,6 @@
 
         if (Key == null)
         {
-            Key = new GradeKey();
         }
     }
 }

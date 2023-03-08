@@ -204,7 +204,7 @@ namespace Core.Logic
                     {
                         Grade grade = new Grade
                         {
-                            GradeKind = new GradeKind { Name = "MAK" },
+                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "MAK"),
                             Student = student,
                             Note = "Testdaten",
                             Subject = subjects.ElementAt(i),
@@ -224,11 +224,11 @@ namespace Core.Logic
         /// <returns></returns>
         public async Task ImportGradeKindsAsync()
         {
-            var gradeKinds = new List<GradeKind>
+            var gradeKinds = new GradeKind[]
             {
-                new GradeKind{Name = "MAK"},
-                new GradeKind{Name = "TEST"},
-                new GradeKind{Name = "HOMEWORK"}
+                new (){Name = "MAK"},
+                new (){Name = "TEST"},
+                new (){Name = "HOMEWORK"}
             };
 
             await DbContext.GradeKinds.AddRangeAsync(gradeKinds);

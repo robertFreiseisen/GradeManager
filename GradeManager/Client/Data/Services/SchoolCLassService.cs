@@ -13,7 +13,7 @@ namespace Client.Data.Services
         }
         public async Task GetAllSchoolClassesAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<SchoolClass>>("http://grades_backend/api/schoolclasses");
+            var result = await _http.GetFromJsonAsync<List<SchoolClass>>("/schoolclasses");
             if (result != null)
             {
                 SchoolClasses = result;

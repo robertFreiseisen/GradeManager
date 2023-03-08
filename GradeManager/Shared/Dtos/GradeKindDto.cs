@@ -5,12 +5,12 @@ using Shared.Entities;
 /// </summary>
 namespace Shared.Dtos
 {
-    public record GradeKindGetDto
+    public class GradeKindGetDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
-    public record GradeKindPostDto
+    public class GradeKindPostDto
     {
         public string Name { get; set; } = string.Empty;
     }

@@ -1,8 +1,7 @@
-﻿@page "/fileupload"
+@page "/fileupload"
 
 @using Client.Services;
 @using global::Shared.Entities;
-
 @using global::Shared.Dtos;
 
 @implements IAsyncDisposable;
@@ -40,12 +39,11 @@
 
 <EditForm Model="@stringCode">
     <InputTextArea @bind-Value="stringCode" readonly style="will-change: auto;"/>
-
 </EditForm>
 
 @code 
 {
-    private int selectedSubject;
+    private int selectedSubject = 1;
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
     void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
@@ -138,7 +136,7 @@
                     scriptType = ScriptType.Lua; 
                     isAllowed = true;
                     break;
-                case "py":
+                case ".py":
                     scriptType = ScriptType.Python;
                     isAllowed = true;
                     break;
@@ -146,7 +144,7 @@
                     scriptType = ScriptType.CSharpScript;
                     isAllowed = true;
                     break;
-                case "js":
+                case ".js":
                     isAllowed = true;
                     scriptType = ScriptType.JavaScript;
                     break;
@@ -159,7 +157,6 @@
             {
                 stringCode = await fileContent.ReadAsStringAsync();
             }
-            
         }
     }    
 }

@@ -78,9 +78,10 @@ namespace API.Profiles
                 dest => dest.TeacherId,
                 opt => opt.MapFrom(src => src.TeacherId)
             )
-            .ForMember(
+            .ForPath(
                 dest => dest.UsedKinds,
-                opt => opt.MapFrom(src => src.UsedKinds)
+                opt => opt.MapFrom(src => src.UsedKinds.Select(k => k.Name))
+
             );
              
         }

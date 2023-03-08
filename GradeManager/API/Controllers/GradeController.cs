@@ -38,70 +38,11 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<GradeGetDto>>> GetAllGradesAsync()
         {
             var grades = await DbContext.Grades.Include(g => g.GradeKind).ToListAsync();
-
             var result = grades.Select(grade => _mapper.Map<GradeGetDto>(grade)).ToList();
 
             return Ok(result);
         }
         
-        [HttpPost("/addKey")]
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        /// <summary>
-        /// Adds GradeKey with GradeKeyPostDto
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public async Task<ActionResult> AddGradeKeyAsync(GradeKeyPostDto key)
-        {
-            var dbKey = await DbContext.GradeKeys
-            .SingleOrDefaultAsync(k => k.Name == key.Name && k.TeacherId == key.TeacherId);
-            
-            if (dbKey != null)
-            {
-                return BadRequest($"GradeKey {key.Name} already exists!");    
-            }
-
-            try
-            {
-                var keyToAdd = _mapper.Map<GradeKey>(key);
-
-                await DbContext.GradeKeys.AddAsync(keyToAdd);
-                await DbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {                
-                return BadRequest(e.Message);
-            }
-            return Ok();
-        }
-        
-        [HttpPost("/addKey")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> AddGradeKeyAsync(GradeKey key)
-        {
-            var dbKey = await DbContext.GradeKeys.SingleOrDefaultAsync(k => k.Name == key.Name && k.TeacherId == key.TeacherId);
-            
-            if (dbKey != null)
-            {
-                return BadRequest($"GradeKey {key.Name} already exists!");    
-            }
-
-            try
-            {
-                await DbContext.GradeKeys.AddAsync(key);
-                await DbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                
-                return BadRequest(e.Message);
-            }
-            return Ok();
-        }
-
         [HttpGet("/calcForClass")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -152,7 +93,6 @@ namespace API.Controllers
             var gradeKinds = await DbContext.GradeKinds.ToListAsync();
             var result = gradeKinds.Select(kind => _mapper.Map<GradeKindGetDto>(kind));
             return Ok(result);
-            return grades;
         }
 
 
@@ -199,30 +139,14 @@ namespace API.Controllers
             {
                 return BadRequest("PostDto required!");
             }
-
-            var kinds = gradeKeyPostDto.UsedKinds.Select(kind => _mapper.Map<GradeKind>(kind));
-
-            var kindsExists = await DbContext.GradeKinds.IntersectBy(kinds, k => k).ToListAsync();           
-
-            var kindsToAdd = kinds.Except(kindsExists).ToList();
-
-            if (kindsToAdd.Count() != 0)
-            {
-                try
-                {
-
-                    await DbContext.GradeKinds.AddRangeAsync(kindsToAdd);   
-                    await DbContext.SaveChangesAsync();   
-                }
-                catch (System.Exception e)
-                {
-                    return BadRequest(e);
-                    throw;
-                }
-            }
-
+            var kinds = gradeKeyPostDto.UsedKinds.Select(kind => _mapper.Map<GradeKind>(kind)).ToList();        
+            var dbKinds = await DbContext.GradeKinds.ToListAsync();
+            var kindsExists = dbKinds.Intersect(kinds, new GradeKindComparer()).ToList();
+            var kindsToAdd = kinds.Except(kindsExists, new GradeKindComparer()).ToList();
 
             var keyToAdd = _mapper.Map<GradeKey>(gradeKeyPostDto);
+            keyToAdd.UsedKinds = kindsToAdd;
+
             try
             {
                 await DbContext.GradeKeys.AddAsync(keyToAdd);

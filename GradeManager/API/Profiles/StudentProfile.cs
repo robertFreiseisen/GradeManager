@@ -8,6 +8,7 @@ namespace API.Profiles
     {
         public StudentProfile()
         {
+
             CreateMap<StudentPostDto, Student>().DisableCtorValidation()
                 .ForMember(
                     dest => dest.Id,

@@ -28,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         /// <summary>
@@ -37,7 +38,6 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<GradeGetDto>>> GetAllGradesAsync()
         {
             var grades = await DbContext.Grades.Include(g => g.GradeKind).ToListAsync();
-
             var result = grades.Select(grade => _mapper.Map<GradeGetDto>(grade)).ToList();
 
             return Ok(result);
@@ -95,6 +95,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
+
         [HttpPut("/keys")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -138,7 +139,6 @@ namespace API.Controllers
             {
                 return BadRequest("PostDto required!");
             }
-
             var kinds = gradeKeyPostDto.UsedKinds.Select(kind => _mapper.Map<GradeKind>(kind)).ToList();        
             var dbKinds = await DbContext.GradeKinds.ToListAsync();
             var kindsExists = dbKinds.Intersect(kinds, new GradeKindComparer()).ToList();
@@ -146,6 +146,7 @@ namespace API.Controllers
 
             var keyToAdd = _mapper.Map<GradeKey>(gradeKeyPostDto);
             keyToAdd.UsedKinds = kindsToAdd;
+
             try
             {
                 await DbContext.GradeKeys.AddAsync(keyToAdd);

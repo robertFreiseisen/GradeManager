@@ -17,6 +17,7 @@ namespace Client.Data.Services
         public List<SchoolClassGetDto> Schooclasses { get; set;} = new List<SchoolClassGetDto>();
         public List<GradeGetDto> Grades { get; set; } = new List<GradeGetDto>();
         public List<GradeKindGetDto> Kinds { get; set; } = new List<GradeKindGetDto>();
+        
         public async Task CreateGradeAsync(Grade grade)
         {
             var result = await _http.PostAsJsonAsync("/grades", grade);
@@ -26,6 +27,12 @@ namespace Client.Data.Services
         private async Task SetGradesAsync(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<GradeKeyGetDto>();
+        }
+
+        public async Task CreateGradeKeyAsync(GradeKeyPostDto key)
+        {
+            var result = await _http.PostAsJsonAsync("addKey", key);
+            await SetKey(result);
         }
 
         public async Task CreateGradeKeyAsync(GradeKeyPostDto key)
@@ -77,6 +84,7 @@ namespace Client.Data.Services
         }
         public async Task GetAllGradesAsync()
         {
+
             var result = await _http.GetFromJsonAsync<List<GradeGetDto>>("http://grades_backend/grades");
             if (result != null)
             {
@@ -87,6 +95,7 @@ namespace Client.Data.Services
         public async Task GetAllKindsAsync()
         {
             var result = await _http.GetFromJsonAsync<List<GradeKindGetDto>>("/kinds");
+
 
             if (result != null)
             {

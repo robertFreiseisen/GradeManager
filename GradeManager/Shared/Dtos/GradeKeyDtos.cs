@@ -16,7 +16,7 @@ namespace Shared.Dtos
         public ScriptType ScriptType { get; set; }
         public string Calculation { get; set; } = string.Empty;
     }
-    
+
     public class GradeKeyGetDto
     {
         public int Id { get; set; }

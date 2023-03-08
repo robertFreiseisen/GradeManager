@@ -1,8 +1,9 @@
-﻿@page "/fileupload"
+@page "/fileupload"
 
 @using Client.Services;
 @using global::Shared.Entities;
 @using global::Shared.Dtos;
+
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
@@ -75,10 +76,10 @@
         {
             ErrorMessage = "Script is needed!";
         }
-
+        
         var kinds = GradeService.Kinds.Select(k => new GradeKindPostDto { Name = k.Name }).ToList();
-
-        var key = new GradeKeyPostDto 
+        await GradeService.CreateGradeKeyAsync(
+            new GradeKeyPostDto 
             { 
                 Name = "test_lua", 
                 UsedKinds = kinds,
@@ -86,9 +87,7 @@
                 SubjectId = selectedSubject, 
                 ScriptType = scriptType, 
                 Calculation = stringCode 
-            };
-
-        await GradeService.CreateGradeKeyAsync(key);
+            });
     }
     public async ValueTask DisposeAsync()
     {
@@ -131,8 +130,7 @@
             var isAllowed = false;
             var fileContent = new StreamContent(file.OpenReadStream());
 
-            var info = new FileInfo(file.Name);
-            switch (info.Extension)
+            switch (Path.GetExtension(file.Name))  
             {
                 case ".lua":
                     scriptType = ScriptType.Lua; 
@@ -142,7 +140,7 @@
                     scriptType = ScriptType.Python;
                     isAllowed = true;
                     break;
-                case ".csc":
+                case "csc":
                     scriptType = ScriptType.CSharpScript;
                     isAllowed = true;
                     break;

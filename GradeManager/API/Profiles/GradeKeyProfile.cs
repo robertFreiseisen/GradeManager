@@ -81,6 +81,7 @@ namespace API.Profiles
             .ForPath(
                 dest => dest.UsedKinds,
                 opt => opt.MapFrom(src => src.UsedKinds.Select(k => k.Name))
+
             );
              
         }

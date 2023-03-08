@@ -224,11 +224,11 @@ namespace Core.Logic
         /// <returns></returns>
         public async Task ImportGradeKindsAsync()
         {
-            var gradeKinds = new List<GradeKind>
+            var gradeKinds = new GradeKind[]
             {
-                new GradeKind{Name = "MAK"},
-                new GradeKind{Name = "TEST"},
-                new GradeKind{Name = "HOMEWORK"}
+                new (){Name = "MAK"},
+                new (){Name = "TEST"},
+                new (){Name = "HOMEWORK"}
             };
 
             await DbContext.GradeKinds.AddRangeAsync(gradeKinds);

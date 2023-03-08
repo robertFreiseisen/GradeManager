@@ -2,6 +2,9 @@
 
 @using Client.Services;
 @using global::Shared.Entities;
+
+@using global::Shared.Dtos;
+
 @implements IAsyncDisposable;
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
@@ -36,7 +39,8 @@
 </div>
 
 <EditForm Model="@stringCode">
-    <InputTextArea @bind-Value="stringCode" readonly />
+    <InputTextArea @bind-Value="stringCode" readonly style="will-change: auto;"/>
+
 </EditForm>
 
 @code 
@@ -74,15 +78,17 @@
         {
             ErrorMessage = "Script is needed!";
         }
-
+        
+        var kinds = GradeService.Kinds.Select(k => new GradeKindPostDto { Name = k.Name }).ToList();
         await GradeService.CreateGradeKeyAsync(
-            new GradeKey 
+            new GradeKeyPostDto 
             { 
-                ScriptType = scriptType, 
-                Name = "test",
+                Name = "test_lua", 
+                UsedKinds = kinds,
                 TeacherId = _userId, 
-                SubjectId = selectedSubject,
-                Calculation = stringCode
+                SubjectId = selectedSubject, 
+                ScriptType = scriptType, 
+                Calculation = stringCode 
             });
     }
     public async ValueTask DisposeAsync()
@@ -126,9 +132,9 @@
             var isAllowed = false;
             var fileContent = new StreamContent(file.OpenReadStream());
 
-            switch (file.Name.Split('.')[1])
+            switch (Path.GetExtension(file.Name))  
             {
-                case "lua":
+                case ".lua":
                     scriptType = ScriptType.Lua; 
                     isAllowed = true;
                     break;
@@ -136,7 +142,7 @@
                     scriptType = ScriptType.Python;
                     isAllowed = true;
                     break;
-                case "cs":
+                case "csc":
                     scriptType = ScriptType.CSharpScript;
                     isAllowed = true;
                     break;

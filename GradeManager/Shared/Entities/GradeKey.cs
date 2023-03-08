@@ -20,7 +20,7 @@ namespace Shared.Entities
         [ForeignKey("Teacher")]
         public int TeacherId { get; set; }
         public Teacher? Teacher { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }

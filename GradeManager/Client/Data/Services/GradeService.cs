@@ -1,7 +1,7 @@
 ﻿using Client.Services;
 using Microsoft.AspNetCore.Components;
+using Shared.Dtos;
 using Shared.Entities;
-
 
 namespace Client.Data.Services
 {
@@ -13,10 +13,16 @@ namespace Client.Data.Services
             _http = http;
         }
 
+        public List<GradeKeyGetDto> GradeKeys { get; set; } = new List<GradeKeyGetDto>();
+        public List<SchoolClassGetDto> Schooclasses { get; set;} = new List<SchoolClassGetDto>();
+        public List<GradeGetDto> Grades { get; set; } = new List<GradeGetDto>();
+        public List<GradeKindGetDto> Kinds { get; set; } = new List<GradeKindGetDto>();
+
         public List<GradeKey> GradeKeys { get; set; } = new List<GradeKey>();
         public List<SchoolClass> Schooclasses { get; set;} = new List<SchoolClass>();
         public List<Grade> Grades { get; set; } = new List<Grade>();
         public List<GradeKind> Kinds { get; set; } = new List<GradeKind>();
+
 
         public async Task CreateGradeAsync(Grade grade)
         {
@@ -26,10 +32,10 @@ namespace Client.Data.Services
 
         private async Task SetGradesAsync(HttpResponseMessage result)
         {
-            var response = await result.Content.ReadFromJsonAsync<Grade>();
+            var response = await result.Content.ReadFromJsonAsync<GradeKeyGetDto>();
         }
 
-        public async Task CreateGradeKeyAsync(GradeKey key)
+        public async Task CreateGradeKeyAsync(GradeKeyPostDto key)
         {
             var result = await _http.PostAsJsonAsync("addKey", key);
             await SetKey(result);
@@ -37,7 +43,9 @@ namespace Client.Data.Services
 
         private async Task SetKey(HttpResponseMessage result)
         {
-            var res = await result.Content.ReadFromJsonAsync<GradeKey>();                
+
+            var res = await result.Content.ReadFromJsonAsync<GradeKeyGetDto>();                
+
             GradeKeys.Add(res!);
         }
 
@@ -48,7 +56,8 @@ namespace Client.Data.Services
 
         public async Task GetAllGradeKeysAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<GradeKey>>("/keys");
+
+            var result = await _http.GetFromJsonAsync<List<GradeKeyGetDto>>("/keys");
             if (result != null)
             {
                 GradeKeys = result;
@@ -62,14 +71,16 @@ namespace Client.Data.Services
             await this.GetAllGradeKeysAsync();
         }
 
-        public GradeKey? GetGradeKeyById(int? id)
+        public GradeKeyGetDto? GetGradeKeyById(int? id)
         {
             return GradeKeys.SingleOrDefault(k => k.Id == id);
         }
 
         public async Task GetAllSchoolclassesAsync()
         {
-            var schoolclasses = await _http.GetFromJsonAsync<List<SchoolClass>>("http://grades_backend/api/SchoolClass/GetAll");
+
+            var schoolclasses = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>("http://grades_backend/api/SchoolClass/GetAll");
+
             if (schoolclasses != null)
             {
                 Schooclasses = schoolclasses;
@@ -77,7 +88,9 @@ namespace Client.Data.Services
         }
         public async Task GetAllGradesAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<Grade>>("http://grades_backend/grades");
+
+            var result = await _http.GetFromJsonAsync<List<GradeGetDto>>("http://grades_backend/grades");
+
             if (result != null)
             {
                 Grades = result;
@@ -86,7 +99,9 @@ namespace Client.Data.Services
 
         public async Task GetAllKindsAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<GradeKind>>("/kinds");
+
+            var result = await _http.GetFromJsonAsync<List<GradeKindGetDto>>("/kinds");
+
 
             if (result != null)
             {

@@ -23,28 +23,12 @@ namespace API.Profiles
                 opt => opt.MapFrom(src => 0)
             )
             .ForMember(
-                dest => dest.Name,
-                opt => opt.MapFrom(src => src.Name)
-            )
-            .ForMember(
-                dest => dest.ScriptType,
-                opt => opt.MapFrom(src => src.ScriptType)
-            )
-            .ForMember(
-                dest => dest.Calculation,
-                opt => opt.MapFrom(src => src.Calculation)
-            )
-            .ForMember(
-                dest => dest.SubjectId,
-                opt => opt.MapFrom(src => src.SubjectId)
-            )
-            .ForMember(
-                dest => dest.TeacherId,
-                opt => opt.MapFrom(src => src.TeacherId)
+                des => des.SchoolClasses, 
+                opt => opt.MapFrom(src => src.SchoolClasses.Select(c => new SchoolClass{ Name = c }))
             )
             .ForMember(
                 dest => dest.UsedKinds,
-                opt => opt.MapFrom(src => src.UsedKinds)
+                opt => opt.MapFrom(src => src.UsedKinds.Select(k => new GradeKind { Name = k }))
             );
 
             /// <summary>
@@ -54,36 +38,14 @@ namespace API.Profiles
             /// <typeparam name="GradeKeyGetDto"></typeparam>
             /// <returns></returns>
             CreateMap<GradeKey, GradeKeyGetDto>().DisableCtorValidation()
-            .ForMember(
-                dest => dest.Id, 
-                opt => opt.MapFrom(src => src.Id)
-            )
-            .ForMember(
-                dest => dest.Name,
-                opt => opt.MapFrom(src => src.Name)
-            )
-            .ForMember(
-                dest => dest.ScriptType,
-                opt => opt.MapFrom(src => src.ScriptType)
-            )
-            .ForMember(
-                dest => dest.Calculation,
-                opt => opt.MapFrom(src => src.Calculation)
-            )
-            .ForMember(
-                dest => dest.SubjectId,
-                opt => opt.MapFrom(src => src.SubjectId)
-            )
-            .ForMember(
-                dest => dest.TeacherId,
-                opt => opt.MapFrom(src => src.TeacherId)
-            )
             .ForPath(
                 dest => dest.UsedKinds,
                 opt => opt.MapFrom(src => src.UsedKinds.Select(k => k.Name))
-
+            )
+            .ForMember(
+                dest => dest.SchoolClasses,
+                opt => opt.MapFrom(src => src.SchoolClasses!.Select(sc => sc.Name))
             );
-             
         }
     }
 }

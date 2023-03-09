@@ -10,7 +10,7 @@ namespace Shared.Dtos
     {
         public string Name { get; set; } = string.Empty;
         public List<string> SchoolClasses { get; set; } = new List<string>();
-        public List<GradeKindPostDto> UsedKinds { get; set; } = new List<GradeKindPostDto>();
+        public List<string> UsedKinds { get; set; } = new List<string>();
         public int TeacherId { get; set; }
         public int SubjectId { get; set; }
         public ScriptType ScriptType { get; set; }

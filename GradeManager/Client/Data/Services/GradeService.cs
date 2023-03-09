@@ -31,7 +31,7 @@ namespace Client.Data.Services
 
         public async Task CreateGradeKeyAsync(GradeKeyPostDto key)
         {
-            var result = await _http.PostAsJsonAsync("addKey", key);
+            var result = await _http.PostAsJsonAsync("/keys", key);
         }
 
         public Task DeleteGradeKeyAsync(int keyId)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,5 +14,18 @@ namespace Shared.Entities
         public List<Student> Students { get; set; }
         public int SchoolLevel { get; set; }
         public DateTime SchoolYear { get; set; }
+    }
+
+    public class SchoolClassComparer : IEqualityComparer<SchoolClass>
+    {
+        public bool Equals(SchoolClass? x, SchoolClass? y)
+        {
+            return x!.Name == y!.Name;
+        }
+
+        public int GetHashCode([DisallowNull] SchoolClass obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

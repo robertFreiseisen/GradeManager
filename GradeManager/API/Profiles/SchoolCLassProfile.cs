@@ -4,37 +4,25 @@ using Shared.Entities;
 
 namespace API.Profiles
 {
-    public class SchoolCLassProfile : Profile
+    public class SchoolClassProfile : Profile
     {
-        public SchoolCLassProfile() 
+        public SchoolClassProfile() 
         {
-            CreateMap<SchoolClassPostDto, SchoolClass>().DisableCtorValidation()              
+            CreateMap<SchoolClassPostDto, SchoolClass>().DisableCtorValidation()     
                 .ForMember(
-                    dest => dest.Name,
-                    opt => opt.MapFrom(src => src.Name))
+                    dest => dest.Id,
+                    opt => opt.MapFrom(src => 0)
+                )
                 .ForMember(
                     dest => dest.Students,
-                    opt => opt.MapFrom(src => src.Stutends))
-                .ForMember(
-                    dest => dest.SchoolLevel,
-                    opt => opt.MapFrom(src => src.SchoolLevel))
-                .ForMember(
-                    dest => dest.SchoolYear,
-                    opt => opt.MapFrom(src => src.SchoolYear));
+                    opt => opt.MapFrom(src => src.Stutends.Select(s => new Student { Name = s}))
+                );
 
-            CreateMap<SchoolClass, SchoolClassGetDto>().DisableCtorValidation().
-                ForMember(
-                    dest => dest.Id,
-                    opt => opt.MapFrom(src => 0))
+            CreateMap<SchoolClass, SchoolClassGetDto>().DisableCtorValidation()
                 .ForMember(
-                    dest => dest.Name,
-                    opt => opt.MapFrom(src => src.Name))
-                .ForMember(
-                    dest => dest.SchoolLevel,
-                    opt => opt.MapFrom(src => src.SchoolLevel))
-                .ForMember(
-                    dest => dest.SchoolYear,
-                    opt => opt.MapFrom(src => src.SchoolYear));
+                    dest => dest.Stutends,
+                    opt => opt.MapFrom(src => src.Students.Select(s => s.Name))
+                );
         }
     }
 }

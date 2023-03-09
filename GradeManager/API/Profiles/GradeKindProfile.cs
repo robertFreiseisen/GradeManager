@@ -17,16 +17,7 @@ namespace API.Profiles
             /// <typeparam name="GradeKind"></typeparam>
             /// <typeparam name="GradeKindGetDto"></typeparam>
             /// <returns></returns>
-            CreateMap<GradeKind, GradeKindGetDto>().DisableCtorValidation()
-            .ForMember(
-                des => des.Id,
-                opt => opt.MapFrom(src => src.Id)
-                
-            )
-            .ForMember(
-                des => des.Name,
-                opt => opt.MapFrom(src => src.Name)
-            );
+            CreateMap<GradeKind, GradeKindGetDto>().DisableCtorValidation();
 
             /// <summary>
             /// Map from GradKindPostDto to DbGradeKind
@@ -37,13 +28,7 @@ namespace API.Profiles
             CreateMap<GradeKindPostDto, GradeKind>().DisableCtorValidation()
             .ForMember(
                 des => des.Id,
-                opt => opt.MapFrom(src => 0)
-                
-            )
-            .ForMember(
-                des => des.Name,
-                opt => opt.MapFrom(src => src.Name)
-            );
+                opt => opt.MapFrom(src => 0));
         }
     }
 }

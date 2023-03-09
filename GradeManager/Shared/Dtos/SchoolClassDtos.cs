@@ -9,7 +9,7 @@ namespace Shared.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public List<StudentGetDto> Stutends { get; set; } = new List<StudentGetDto>();
+        public List<string> Stutends { get; set; } = new List<string>();
         public int SchoolLevel { get; set; }
         public DateTime SchoolYear { get; set; }
     }
@@ -17,7 +17,7 @@ namespace Shared.Dtos
     public class SchoolClassPostDto
     {
         public string Name { get; set; } = string.Empty;
-        public List<StudentPostDto> Stutends { get; set; } = new List<StudentPostDto>();
+        public List<string> Stutends { get; set; } = new List<string>();
         public int SchoolLevel { get; set; }
         public DateTime SchoolYear { get; set; }
     }

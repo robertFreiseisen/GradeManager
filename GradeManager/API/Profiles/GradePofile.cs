@@ -34,26 +34,6 @@ namespace API.Profiles
             /// <typeparam name="GradeGetDto"></typeparam>
             /// <returns></returns>
             CreateMap<Grade, GradeGetDto>()
-            .ForMember(
-                dest => dest.Id, 
-                opt => opt.MapFrom(src => src.Id)
-            )
-            .ForMember(
-                dest => dest.Note,
-                opt => opt.MapFrom(src => src.Note)
-            )
-            .ForMember(
-                dest => dest.StudentId, 
-                opt => opt.MapFrom(src => src.StudentId)
-            )
-            .ForMember(
-                dest => dest.SubjectId,
-                opt => opt.MapFrom(src => src.SubjectId)
-            )
-            .ForMember(
-                dest => dest.TeacherId,
-                opt => opt.MapFrom(src => src.TeacherId)
-            )
             .ForPath(
                 dest => dest.GradeKind,
                 opt => opt.MapFrom(src => src.GradeKind.Name)
@@ -70,22 +50,6 @@ namespace API.Profiles
             .ForMember(
                 dest => dest.Id, 
                 opt => opt.MapFrom(src => 0)
-            )
-            .ForMember(
-                dest => dest.Note,
-                opt => opt.MapFrom(src => src.Note)
-            )
-            .ForMember(
-                dest => dest.StudentId, 
-                opt => opt.MapFrom(src => src.StudentId)
-            )
-            .ForMember(
-                dest => dest.SubjectId,
-                opt => opt.MapFrom(src => src.SubjectId)
-            )
-            .ForMember(
-                dest => dest.TeacherId,
-                opt => opt.MapFrom(src => src.TeacherId)
             )
             .ForPath(
                 dest => dest.GradeKind.Name,

@@ -77,7 +77,8 @@
             ErrorMessage = "Script is needed!";
         }
         
-        var kinds = GradeService.Kinds.Select(k => new GradeKindPostDto { Name = k.Name }).ToList();
+        var kinds = GradeService.Kinds.Select(k => k.Name).ToList();
+        var schoolClasses = new List<string>{"5BHIF"};
         await GradeService.CreateGradeKeyAsync(
             new GradeKeyPostDto 
             { 
@@ -86,6 +87,7 @@
                 TeacherId = _userId, 
                 SubjectId = selectedSubject, 
                 ScriptType = scriptType, 
+                SchoolClasses = schoolClasses,
                 Calculation = stringCode 
             });
     }
@@ -129,8 +131,9 @@
         {
             var isAllowed = false;
             var fileContent = new StreamContent(file.OpenReadStream());
+            var info = new FileInfo(file.Name);
 
-            switch (Path.GetExtension(file.Name))  
+            switch (info.Extension)
             {
                 case ".lua":
                     scriptType = ScriptType.Lua; 
@@ -140,7 +143,7 @@
                     scriptType = ScriptType.Python;
                     isAllowed = true;
                     break;
-                case "csc":
+                case ".csc":
                     scriptType = ScriptType.CSharpScript;
                     isAllowed = true;
                     break;

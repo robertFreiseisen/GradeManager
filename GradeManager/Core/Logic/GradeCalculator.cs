@@ -21,28 +21,34 @@ namespace Core.Logic
 
         public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject)
         {
+
+
+            var studentsId = await context.Students.Where(s => s.SchoolClassId == schoolClassId).Select(s => s.Id).ToListAsync();
+
             var grades = await context.Grades
                 .Include(g => g.Subject)
                 .Include(g => g.Student)
-                .Where(g => g.SubjectId == subject && g.Student!.SchoolClassId == schoolClassId).ToListAsync();
+                .Where(g => g.SubjectId == subject && studentsId.Any(id => id == g.StudentId))
+                .ToListAsync();
 
             if (grades == null || grades.Count() == 0)
             {
-                return null;
+                return new List<Grade>();
             }
 
             var g1 = grades.First();
-            var key = await context.GradeKeys.SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId);
+            var key = await context.GradeKeys
+                .SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId);
 
-            if (key == null)
-            {
+            if(key == null)
                 return null;
-            }
-
-
+                
             var result = new List<Grade>();
 
-            var studentGrades = grades.GroupBy(g => g.Student).Select(g => this.RunScript(key, g.ToList(), g.Key!));
+            var studentGrades = grades
+                .GroupBy(g => g.Student)
+                .Select(g => this.RunScript(key, g.ToList(), g.Key!));
+
             return studentGrades.ToList();
         }
 
@@ -65,11 +71,22 @@ namespace Core.Logic
                 case ScriptType.CSharpScript:
                     break;
                 default:
+                    result = null;
                     break;
             }
 
+            if (result == null)
+            {
+                throw new Exception("Erorr in Calculation");
+            }
+
+            result.Student = student;
+
+            result.Note = $"{student.Name} : {DateTime.Now}";
+
             return result;
         }
+
 
     }
 }

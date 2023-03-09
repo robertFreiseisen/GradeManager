@@ -28,7 +28,6 @@ namespace API.Controllers
         }
 
         [HttpGet]
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         /// <summary>
@@ -54,15 +53,44 @@ namespace API.Controllers
         /// <returns></returns>
         public async Task<ActionResult<IEnumerable<GradeGetDto>>> CalculateGradesForClassAsync(int schoolClassId, int subjectId)
         {
-            var grades = await _gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId);
-            if (grades == null)
+            var dbGrades = await DbContext.Grades
+                .Include(g => g.Student)
+                .Where(g => g.Student!.SchoolClassId == schoolClassId && g.SubjectId == subjectId)
+                .ToListAsync();
+
+            if (dbGrades == null)
             {
-                return BadRequest();
+                return BadRequest("No Grades found!");
             }
 
-            var result = grades.Select(grade => _mapper.Map<GradeGetDto>(grade)).ToList();
+            var keyForClassExists = DbContext.GradeKeys
+                .Any(g => 
+                        g.SchoolClasses!.Any(s => s.Id == schoolClassId) &&
+                        g.SubjectId == subjectId);
 
-            return Ok(result);
+            if (!keyForClassExists)
+            {
+                return BadRequest($"No Key for this class found!");
+            }
+
+            var result =  (await _gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId));
+
+            if (result == null || result.Count() == 0)
+            {
+                return BadRequest("Error in Calculation");
+            }
+
+            try
+            {
+                await DbContext.Grades.AddRangeAsync(result);
+                await DbContext.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                 return BadRequest(ex);
+            }
+
+            return Ok(result.Select(g => _mapper.Map<GradeGetDto>(g)).ToList());
         }
 
         [HttpGet("/keys")]
@@ -139,17 +167,26 @@ namespace API.Controllers
             {
                 return BadRequest("PostDto required!");
             }
-            var kinds = gradeKeyPostDto.UsedKinds.Select(kind => _mapper.Map<GradeKind>(kind)).ToList();        
+            var gradeKeyToAddDb = _mapper.Map<GradeKey>(gradeKeyPostDto); 
+            var kinds = gradeKeyToAddDb.UsedKinds.ToList();        
             var dbKinds = await DbContext.GradeKinds.ToListAsync();
-            var kindsExists = dbKinds.Intersect(kinds, new GradeKindComparer()).ToList();
-            var kindsToAdd = kinds.Except(kindsExists, new GradeKindComparer()).ToList();
+            //var kindsExistsName = dbKinds.Select(k => k.Name).Intersect(gradeKeyPostDto.UsedKinds).ToList();
+            //var kindsToAdd = kinds.Where(k => !kindsExistsName.Any(e => e == k.Name)).ToList();
 
-            var keyToAdd = _mapper.Map<GradeKey>(gradeKeyPostDto);
-            keyToAdd.UsedKinds = kindsToAdd;
+
+            gradeKeyToAddDb.UsedKinds = kinds;
+
+            var schoolClassesDb = DbContext.SchoolClasses.ToList();
+            var schoolClasses = gradeKeyToAddDb.SchoolClasses!.Select(s => s.Name).ToList();
+
+            if (schoolClasses.Except(schoolClassesDb.Select(s => s.Name)).Count() > 0)
+            {
+                return BadRequest("Some Schoolclasses may not exists");
+            }
 
             try
             {
-                await DbContext.GradeKeys.AddAsync(keyToAdd);
+                await DbContext.GradeKeys.AddAsync(gradeKeyToAddDb);
                 await DbContext.SaveChangesAsync();
             }
             catch (Exception ex)

@@ -21,14 +21,10 @@ namespace Core.Logic
 
         public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject)
         {
-
-
-            var studentsId = await context.Students.Where(s => s.SchoolClassId == schoolClassId).Select(s => s.Id).ToListAsync();
-
             var grades = await context.Grades
                 .Include(g => g.Subject)
                 .Include(g => g.Student)
-                .Where(g => g.SubjectId == subject && studentsId.Any(id => id == g.StudentId))
+                .Where(g => g.SubjectId == subject && g.Student!.SchoolClassId == schoolClassId)
                 .ToListAsync();
 
             if (grades == null || grades.Count() == 0)
@@ -45,11 +41,21 @@ namespace Core.Logic
                 
             var result = new List<Grade>();
 
-            var studentGrades = grades
-                .GroupBy(g => g.Student)
-                .Select(g => this.RunScript(key, g.ToList(), g.Key!));
+            foreach (var item in grades.DistinctBy(g => g.StudentId).Select(g => g.StudentId))
+            {
+                var student = context.Students.Single(s => s.Id == item);
+                var gradesForCalc =  grades.Where(g => g.StudentId == student.Id).ToList();
+                var gradeForStudent = this.RunScript(key, 
+                                                   gradesForCalc, 
+                                                   student);
+                gradeForStudent.TeacherId = key.TeacherId;
+                gradeForStudent.StudentId = item;
+                gradeForStudent.SubjectId = key.SubjectId;
+                gradeForStudent.GradeKindId = 1;
+                result.Add(gradeForStudent);
+            }
 
-            return studentGrades.ToList();
+            return result;
         }
 
         /// Handels the script type

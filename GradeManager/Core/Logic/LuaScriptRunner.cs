@@ -40,7 +40,7 @@ namespace Core.Logic
                 var gr = state["graduate"];
                 if (gr != null) 
                 {
-                    result.Graduate = (int) (Convert.ToDouble(gr));;
+                    result.Graduate = Convert.ToInt32(gr);
                 }
             }
             catch (Exception)

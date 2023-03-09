@@ -9,6 +9,7 @@ namespace Shared.Dtos
     {
         public int Id { get; set; } 
         public string GradeKind { get; set;} = string.Empty;
+        public int Graduate { get; set; }
         public int SubjectId { get; set; }
         public int TeacherId { get; set; } 
         public int StudentId { get; set; } 
@@ -19,6 +20,7 @@ namespace Shared.Dtos
     {
         public string GradeKind { get; set;} = string.Empty;
         public int SubjectId { get; set; }
+        public int Graduate { get; set; }
         public int TeacherId { get; set; } 
         public int StudentId { get; set; } 
         public string? Note { get; set; } = string.Empty;

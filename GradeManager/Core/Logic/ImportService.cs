@@ -86,7 +86,6 @@ namespace Core.Logic
             }
             schoolClasses.ElementAt(4).Students = fifthStudents;
             #endregion
-
             return schoolClasses;
         }
 
@@ -197,6 +196,8 @@ namespace Core.Logic
 
             foreach (var schoolClass in schoolClasses)
             {
+                var ran = new Random();
+
                 var studentsFromClass = schoolClass.Students.ToList();
                 foreach (var student in studentsFromClass)
                 {
@@ -209,7 +210,34 @@ namespace Core.Logic
                             Note = "Testdaten",
                             Subject = subjects.ElementAt(i),
                             Teacher = teachers.ElementAt(i),
-                            Graduate = i + 1
+                            Graduate = ran.Next(1,5)
+                        };
+                        await DbContext.Grades.AddAsync(grade);
+                    }
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Grade grade = new Grade
+                        {
+                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "TEST"),
+                            Student = student,
+                            Note = "Testdaten",
+                            Subject = subjects.ElementAt(i),
+                            Teacher = teachers.ElementAt(i),
+                            Graduate = ran.Next(1,5)
+                        };
+                        await DbContext.Grades.AddAsync(grade);
+                    }
+                    
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Grade grade = new Grade
+                        {
+                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "HOMEWORK"),
+                            Student = student,
+                            Note = "Testdaten",
+                            Subject = subjects.ElementAt(i),
+                            Teacher = teachers.ElementAt(i),
+                            Graduate = ran.Next(1,5)
                         };
                         await DbContext.Grades.AddAsync(grade);
                     }
@@ -226,6 +254,7 @@ namespace Core.Logic
         {
             var gradeKinds = new GradeKind[]
             {
+                new (){Name = "YEAR"},
                 new (){Name = "MAK"},
                 new (){Name = "TEST"},
                 new (){Name = "HOMEWORK"}

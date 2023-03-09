@@ -73,7 +73,7 @@ namespace API.Controllers
                 return BadRequest($"No Key for this class found!");
             }
 
-            var result =  (await _gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId));
+            var result =  (await _gradeCalculator.CalculateKeysForClassAndSubject(schoolClassId, subjectId)).ToList();
 
             if (result == null || result.Count() == 0)
             {
@@ -82,7 +82,7 @@ namespace API.Controllers
 
             try
             {
-                await DbContext.Grades.AddRangeAsync(result);
+                await DbContext.Grades.AddRangeAsync(result!);
                 await DbContext.SaveChangesAsync();
             }
             catch (System.Exception ex)
@@ -90,7 +90,8 @@ namespace API.Controllers
                  return BadRequest(ex);
             }
 
-            return Ok(result.Select(g => _mapper.Map<GradeGetDto>(g)).ToList());
+            var ret = result.Select(g => _mapper.Map<GradeGetDto>(g)).ToList();
+            return Ok(ret);
         }
 
         [HttpGet("/keys")]
@@ -179,9 +180,24 @@ namespace API.Controllers
             var schoolClassesDb = DbContext.SchoolClasses.ToList();
             var schoolClasses = gradeKeyToAddDb.SchoolClasses!.Select(s => s.Name).ToList();
 
+
+
             if (schoolClasses.Except(schoolClassesDb.Select(s => s.Name)).Count() > 0)
             {
                 return BadRequest("Some Schoolclasses may not exists");
+            }
+
+            gradeKeyToAddDb.SchoolClasses = new List<SchoolClass>();
+            foreach (var item in schoolClasses)
+            {
+                gradeKeyToAddDb.SchoolClasses.Add(schoolClassesDb.Single(s => s.Name == item));
+            }
+
+            gradeKeyToAddDb.UsedKinds = new List<GradeKind>();
+
+            foreach (var item in kinds)
+            {
+                gradeKeyToAddDb.UsedKinds.Add(dbKinds.Single(k => k.Name == item.Name));
             }
 
             try

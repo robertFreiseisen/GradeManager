@@ -23,6 +23,11 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 builder.Services.AddTransient<GradeCalculator>();
 builder.Services.AddSingleton<ImportService>();
 builder.Services.AddSingleton<ApplicationDbContext>();
+builder.Services.AddMvc().AddJsonOptions(x =>
+    {
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; 
+    
+    });
 
 //ImportService importService = new ImportService();
 //var schoolClasses = importService.ImportSchoolClasses();
@@ -38,6 +43,19 @@ var import = app.Services.GetService<ImportService>();
 await import!.ImportSubjectsAsync();
 await import!.ImportTeachersAsync();
 await import!.ImportSchoolClassesAsync();
+
+foreach (var item in context.SchoolClasses)
+{
+    foreach (var student in item.Students)
+    {
+        student.SchoolClassId = item.Id;  
+    }
+}
+
+await context.SaveChangesAsync();
+
+
+
 await import!.ImportGradeKindsAsync();
 await import!.ImportGradesToStudentsAsync();
 

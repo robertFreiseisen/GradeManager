@@ -20,5 +20,7 @@ function calculate()
         end
     end
 
-    return ((makGrade / makGradesCount) + ( testGrade / testCount ) + (hwGrade / hwCount)) / 3     
+    local result = ((makGrade / makGradesCount) + ( testGrade / testCount ) + (hwGrade / hwCount)) / 3     
+
+    return math.floor(result)
 end

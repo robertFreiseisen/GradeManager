@@ -60,6 +60,10 @@ namespace CalculationTests
         [TestMethod]
         public void JavaScriptTest()
         {
+            //string fileName = "test.js";
+            //string path = Path.Combine(Environment.CurrentDirectory, @"Data\", fileName);
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "\\CalculationTests\\test.js";
+
             var gradeKinds = new List<GradeKind>
             {
                 new GradeKind { Name = "MAK" },

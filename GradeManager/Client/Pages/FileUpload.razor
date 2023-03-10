@@ -8,6 +8,7 @@
 @inject IJSRuntime JSRuntime;
 @inject ISubjectService SubjectService;
 @inject IGradeService GradeService;
+@inject NavigationManager NavigationManager;
 
 <h3>Upload your code as a file!</h3>
 
@@ -23,8 +24,11 @@
         }
 </select>
 
-<select class="form-control" @>
-
+<select class="form-control" @bind="@selectedClass">
+        @foreach (var item in @GradeService.Schooclasses)
+        {
+            <option value="@item.Name"> @item.Name </option>
+        }
 </select>
 
 <div class="error-message-container">
@@ -33,7 +37,7 @@
 
 <div>
     <button type="submit" @onclick="AddGradeKeyAsync">
-        Add
+        Calculate
     </button>
 </div>
 
@@ -43,6 +47,7 @@
 
 @code 
 {
+    private string selectedClass = string.Empty;
     private int selectedSubject = 1;
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
@@ -62,7 +67,9 @@
         try
         {
             await GradeService.GetAllKindsAsync();
+            await GradeService.GetSchoolclassesByTeacherAsync(_userId);
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
+            selectedClass = GradeService.Schooclasses.Select(s => s.Name).First();
         }
 
         catch(Exception e)
@@ -78,7 +85,7 @@
         }
         
         var kinds = GradeService.Kinds.Select(k => k.Name).ToList();
-        var schoolClasses = new List<string>{"4BHIF"};
+        var schoolClasses = new List<string>{selectedClass};
         await GradeService.CreateGradeKeyAsync(
             new GradeKeyPostDto 
             { 
@@ -90,7 +97,12 @@
                 SchoolClasses = schoolClasses,
                 Calculation = stringCode 
             });
+        var sc = GradeService.Schooclasses.SingleOrDefault(s => s.Name == selectedClass);
+        await GradeService.CalcGradesForClass(sc!.Id, _userId);
+
+        NavigationManager.NavigateTo($"/gradesForClass/{sc.Id}");
     }
+
     public async ValueTask DisposeAsync()
     {
         if (_filePasteFunctionReference != null)

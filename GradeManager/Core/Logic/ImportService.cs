@@ -123,11 +123,34 @@ namespace Core.Logic
                 .RuleFor(x => x.Name, x => x.Person.FullName)
                 .Generate();
                 fakeTeacher.Subjects = await GetRandomSubjectsAsync(2);
+                fakeTeacher.SchoolClasses = await GetRandomSchoolclassAsync(4);
 
                 teachers.Add(fakeTeacher);
             }
 
             return teachers;
+        }
+
+        private async Task<List<SchoolClass>?> GetRandomSchoolclassAsync(int quantity)
+        {
+            var scs = new List<SchoolClass>();
+            var allSchoolclasses = await DbContext.SchoolClasses.ToArrayAsync();
+            for (int i = 0; i < quantity; i++)
+            {
+                //var rand = new Random();
+                var ran = allSchoolclasses[Random.Shared.Next(0, allSchoolclasses.Length - 1)];
+                var contains = scs.Find(s => s.Name == ran.Name);
+                if (contains == null)
+                {
+                    scs.Add(ran);
+                }
+                else
+                {
+                    i--;
+                }
+            }
+
+            return scs;
         }
 
         /// <summary>

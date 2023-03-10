@@ -14,11 +14,13 @@ namespace Client.Services
         //Task CreateGradeAsync(Grade grade);
         //Task GetAllGradesAsync();
         GradeKeyGetDto? GetGradeKeyById(int? id);
-
         Task GetAllSchoolclassesAsync();
         Task GetAllGradeKeysAsync();
         Task CreateGradeKeyAsync(GradeKeyPostDto key);
         Task DeleteGradeKeyAsync(int keyId);
+        Task CalcGradesForClass(int schoolClassId, int subjectId);
+        Task<List<GradeGetDto>> GetGradesForClass(int schoolClassId);
+        Task GetSchoolclassesByTeacherAsync(int teacherId);
         //Task UpdateGradeAsync(int gradeId);
         //Task DeleteGradeAsync(int gradeId);
     }

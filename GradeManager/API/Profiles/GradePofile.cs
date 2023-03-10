@@ -35,6 +35,10 @@ namespace API.Profiles
             /// <returns></returns>
             CreateMap<Grade, GradeGetDto>()
             .ForPath(
+                dest => dest.StudentName,
+                opt => opt.MapFrom(src => src.Student!.Name)
+            )
+            .ForPath(
                 dest => dest.GradeKind,
                 opt => opt.MapFrom(src => src.GradeKind.Name)
             );

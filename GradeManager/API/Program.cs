@@ -41,8 +41,8 @@ await context.Database.EnsureCreatedAsync();
 
 var import = app.Services.GetService<ImportService>();
 await import!.ImportSubjectsAsync();
-await import!.ImportTeachersAsync();
 await import!.ImportSchoolClassesAsync();
+await import!.ImportTeachersAsync();
 
 foreach (var item in context.SchoolClasses)
 {
@@ -54,10 +54,14 @@ foreach (var item in context.SchoolClasses)
 
 await context.SaveChangesAsync();
 
-
-
 await import!.ImportGradeKindsAsync();
 await import!.ImportGradesToStudentsAsync();
+
+await context.SaveChangesAsync();
+
+
+
+
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

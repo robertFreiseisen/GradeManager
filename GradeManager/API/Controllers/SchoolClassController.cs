@@ -29,9 +29,20 @@ namespace API.Controllers
         {
             var schoolClasses = await DbContext.SchoolClasses.ToListAsync();
 
-            var result = schoolClasses.Select(sc => _mapper.Map<SchoolClassGetDto>(sc)).ToList();
 
+            var result = schoolClasses.Select(sc => _mapper.Map<SchoolClassGetDto>(sc)).ToList();
             return Ok(result);
+        }
+
+        [HttpGet("/schoolclassesByTeacher/{teacherId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SchoolClassGetDto>>> GetByTeacherAsync(int teacherId)
+        {
+            var teacher = await DbContext.Teachers.Include(t => t.SchoolClasses).SingleOrDefaultAsync(t => t.Id == teacherId);
+
+            var ret = teacher!.SchoolClasses!.Select(sc => _mapper.Map<SchoolClassGetDto>(sc)).ToList();
+            
+            return Ok(ret);
         }
     }
 }

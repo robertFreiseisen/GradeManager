@@ -13,6 +13,7 @@ namespace Shared.Entities
         public string Name { get; set; }
         public List<Student> Students { get; set; }
         public int SchoolLevel { get; set; }
+        public List<Teacher> Teachers { get; set; }
         public DateTime SchoolYear { get; set; }
     }
 

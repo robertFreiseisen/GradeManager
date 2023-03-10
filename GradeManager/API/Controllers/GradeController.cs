@@ -36,11 +36,38 @@ namespace API.Controllers
         /// <returns>IEnumberable<GradeGetDto> result </returns>
         public async Task<ActionResult<IEnumerable<GradeGetDto>>> GetAllGradesAsync()
         {
-            var grades = await DbContext.Grades.Include(g => g.GradeKind).ToListAsync();
+            var grades = await DbContext.Grades
+            .Include(g => g.Student)
+            .Include(g => g.GradeKind)
+            .ToListAsync();
+            
             var result = grades.Select(grade => _mapper.Map<GradeGetDto>(grade)).ToList();
 
             return Ok(result);
         }
+
+        [HttpGet("/gradesForClass/{schoolClassId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        /// <summary>
+        /// Get all grades from backend
+        /// </summary>
+        /// <returns>IEnumberable<GradeGetDto> result </returns>
+        public async Task<ActionResult<IEnumerable<GradeGetDto>>> GetGradesForSchoolClassAsync(int schoolClassId)
+        {
+            var grades = await DbContext.Grades
+            .Include(g => g.Student)
+            .Include(g => g.GradeKind)
+            .Where(g => g.Student!.SchoolClassId == schoolClassId)
+            .ToListAsync();
+            
+            var result = grades.Select(grade => _mapper.Map<GradeGetDto>(grade)).ToList();
+
+            return Ok(result);
+        }
+        
+
+
         
         [HttpGet("/calcForClass")]
         [ProducesResponseType(StatusCodes.Status200OK)]

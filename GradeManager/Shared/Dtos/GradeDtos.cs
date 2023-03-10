@@ -14,6 +14,7 @@ namespace Shared.Dtos
         public int TeacherId { get; set; } 
         public int StudentId { get; set; } 
         public string? Note { get; set; } = string.Empty;
+        public string StudentName { get; set; } = string.Empty;
     }
 
     public class GradePostDto

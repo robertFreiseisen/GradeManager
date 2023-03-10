@@ -1,0 +1,40 @@
+﻿@page "/gradesForClass/{ClassId:int?}"
+
+@using Client.Data.Services;
+@using Client.Services;
+@using global::Shared.Entities;
+
+@inject IGradeService GradeService;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>Schoolclass</PageTitle>
+
+<h3>Grades</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Graduate</th>
+            <th>GradeType</th>          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var grade in GradeService.Grades)
+        {
+            <tr>
+                <td>@grade.StudentName</td>
+                <td>@grade.Graduate</td>
+                <td>@grade.GradeKind</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int ClassId { get; set; }  = 0;
+    protected override async Task OnInitializedAsync()
+    {
+        await GradeService.GetGradesForClass(ClassId);
+    }
+}

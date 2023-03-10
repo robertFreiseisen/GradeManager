@@ -88,5 +88,34 @@ namespace Client.Data.Services
                 Kinds = result;
             }
         }
+
+        public async Task CalcGradesForClass(int schoolClassId, int subjectId)
+        {
+            var result = await _http.GetFromJsonAsync<List<GradeGetDto>>($"/calcForClass?schoolClassId={schoolClassId}&subjectId={subjectId}");
+            Grades.AddRange(result!);
+        }
+
+        public async Task<List<GradeGetDto>> GetGradesForClass(int schoolClassId)
+        {
+            try
+            {
+                var result = await _http.GetFromJsonAsync<List<GradeGetDto>>($"/gradesForClass/{schoolClassId}");           
+                return result!;
+            }
+
+            catch(Exception e){
+
+            }
+            return null;
+
+ 
+        }
+
+        public async Task GetSchoolclassesByTeacherAsync(int teacherId)
+        {
+            var result = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>($"/schoolclassesByTeacher/{teacherId}");
+
+            Schooclasses = result;
+        }
     }
 }

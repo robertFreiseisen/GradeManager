@@ -16,6 +16,9 @@ namespace Core.Logic
 
             try
             {
+                var gradeKinds = key.UsedKinds;
+
+                engine.SetValue("gradeKinds", gradeKinds);
                 var returnFromScript = engine
                     .Execute(key.Calculation)                    
                     .GetValue("result");

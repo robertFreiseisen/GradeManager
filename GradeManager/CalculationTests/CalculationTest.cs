@@ -70,14 +70,33 @@ namespace CalculationTests
                 new GradeKind { Name = "TEST" },
                 new GradeKind { Name = "HOMEWORK"}
             };
+            var grades = new List<Grade>
+            {
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 5 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 4 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 3 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 2 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 1 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 1},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 2},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 3},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 4},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 5},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 1},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 2},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 3},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 4},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 5},
+
+            };
 
             var code = File.ReadAllText("test.js");
             var key = new GradeKey { Name = "JavascriptTest", UsedKinds = gradeKinds, Calculation = code };
 
             var runner = new JavascriptRunner();
-            var result = runner.RunScript(key);
+            var result = runner.RunScript(key,grades);
 
-            Assert.AreEqual(3, result.Graduate, "Calculation is right");
+            Assert.AreEqual(15, result.Graduate, "Calculation is right");
         }
     }
 }

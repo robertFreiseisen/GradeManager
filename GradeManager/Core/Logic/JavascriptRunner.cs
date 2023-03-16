@@ -5,7 +5,7 @@ namespace Core.Logic
 {
     public class JavascriptRunner
     {
-        public Grade RunScript(GradeKey key)
+        public Grade RunScript(GradeKey key, List<Grade> grades)
         {
             if (key.Calculation == string.Empty || key.UsedKinds == null)
             {
@@ -16,9 +16,10 @@ namespace Core.Logic
 
             try
             {
-                var gradeKinds = key.UsedKinds;
+                var gradeKinds = key.UsedKinds.ToArray();
 
-                engine.SetValue("gradeKinds", gradeKinds);
+                engine.SetValue("gradeKinds", gradeKinds)
+                      .SetValue("grades", grades.ToArray());
                 var returnFromScript = engine
                     .Execute(key.Calculation)                    
                     .GetValue("result");

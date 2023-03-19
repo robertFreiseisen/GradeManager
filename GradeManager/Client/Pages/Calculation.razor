@@ -1,0 +1,81 @@
+﻿@page "/calculation"
+
+@using Client.Data.Services;
+@using Client.Services;
+@using global::Shared.Dtos;
+
+@inject IGradeService GradeService;
+@inject ISubjectService SubjectService;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>Schoolclasses</PageTitle>
+
+<h3>Calculate for class!</h3>
+
+<EditForm Model="@selectedSchoolClassId">
+    <InputSelect id="subject" @bind-Value="selectedSubjectId">
+        @foreach (var item in @SubjectService.Subjects)
+        {
+            <option value="@item.Id"> @item.Name </option>
+        }
+    </InputSelect>
+
+    <InputSelect id="schoolclass" @bind-Value="selectedSchoolClassId">
+        @foreach (var item in @GradeService.Schooclasses)
+        {
+            <option value="@item.Id"> @item.Name </option>
+        }
+    </InputSelect>
+
+    <div>
+        <p>@ErrorMessage</p>
+    </div>
+
+    
+    <div>
+        <button type="submit" @onclick="CalculateAsync">
+            Calculate
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    private List<string> SchoolClasses = new();
+    private int selectedSchoolClassId = 0;
+    private int selectedSubjectId = 0;
+    private int _userId = 1;
+    private string ErrorMessage = string.Empty;
+    private async Task CalculateAsync()
+    {
+        if(selectedSchoolClassId == 0)
+        {
+            ErrorMessage = "SchoolClassId can't be 0"; 
+        }
+
+        else if(selectedSubjectId == 0)
+        {
+            ErrorMessage = "SubjectId can't be 0";
+        }
+
+        else 
+        {
+            await GradeService.CalcGradesForClass(selectedSchoolClassId, selectedSubjectId);
+            NavigationManager.NavigateTo($"/gradesForClass/{selectedSchoolClassId}");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await GradeService.GetSchoolclassesByTeacherAsync(_userId);
+            await SubjectService.GetSubjectsByTeacherAsync(_userId);
+            await GradeService.GetAllGradeKeysAsync();
+        }
+
+        catch (Exception e)
+        {
+            throw;
+        }
+    }
+}

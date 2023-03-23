@@ -17,24 +17,21 @@ namespace Core.Logic
 
             try
             {
-                var gradeKinds = key.UsedKinds.ToArray();
-
                 //var jsObjects = gradeKinds.Select(o => new {
                 //    Name = o.Name
                 //}).ToArray();
-                var gradeKindz = Newtonsoft.Json.JsonConvert.SerializeObject(gradeKinds);
-                engine.SetValue("gradeKinds", gradeKindz)
+                //
+                
+
+                engine.SetValue("gradeKinds", key.UsedKinds.ToArray())
                       .SetValue("grades", grades.ToArray());
 
-                //var returnFromScript = engine
-                //    .Execute(key.Calculation)
-                //    .GetValue("result");
                 var returnFromScript = engine
                     .Execute(key.Calculation)
-                    .GetValue("debug");
-                var debug = TypeConverter.ToString(returnFromScript);
+                    .GetValue("result");
+
                 result.Teacher = key.Teacher;
-                //result.Graduate = TypeConverter.ToInt32(returnFromScript);
+                result.Graduate = TypeConverter.ToInt32(returnFromScript);
             }
             catch (Exception)
             {

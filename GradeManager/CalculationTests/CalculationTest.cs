@@ -96,7 +96,7 @@ namespace CalculationTests
             var runner = new JavascriptRunner();
             var result = runner.RunScript(key,grades);
 
-            Assert.AreEqual(1, result.Graduate, "Calculation is right");
+            Assert.AreEqual(15, result.Graduate, "Calculation is right");
         }
     }
 }

@@ -20,9 +20,7 @@ namespace Core.Logic
                 //var jsObjects = gradeKinds.Select(o => new {
                 //    Name = o.Name
                 //}).ToArray();
-                //
-                
-
+                               
                 engine.SetValue("gradeKinds", key.UsedKinds.ToArray())
                       .SetValue("grades", grades.ToArray());
 

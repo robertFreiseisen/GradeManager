@@ -23,7 +23,7 @@
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="gradesForClass">
-                <span class="justify-content-between" aria-hidden="true"/> ScriptInput
+                <span class="justify-content-between" aria-hidden="true"/> GradesForClass
             </NavLink>
         </div>
         <div class="nav-item px-3">
@@ -46,7 +46,6 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
@@ -54,7 +53,5 @@
     private void NavigateToScript()
     {
         NavigationManager.NavigateTo($"script/");
-    }
-
-    
+    }   
 }

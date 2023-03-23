@@ -12,43 +12,39 @@
 
 <h3>Upload your code as a file!</h3>
 
-<div @ref="fileDropContainer" class="file-drop-zone @HoverClass" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter">
-    <InputFile OnChange="@OnChange"  multiple/>
-</div>
+<EditForm Model="@gradeKeyPost">
+    <InputText id="name" @bind-Value="gradeKeyPost.Name" />
 
-<select class="form-control" @bind="@selectedSubject">
-
+    <InputSelect id="subject" @bind-Value="gradeKeyPost.SubjectId">
         @foreach (var item in @SubjectService.Subjects)
         {
             <option value="@item.Id"> @item.Name </option>
         }
-</select>
+    </InputSelect>
 
-<select class="form-control" @bind="@selectedClass">
-        @foreach (var item in @GradeService.Schooclasses)
-        {
-            <option value="@item.Name"> @item.Name </option>
-        }
-</select>
+    <CheckBoxList Data="@GradeService.Schooclasses" TextField="@((item)=>item.Name)" ValueField="@((item)=>item.Name)"
+        SelectedValues="@SelectedSchoolClasses" />
 
-<div class="error-message-container">
-    <p>@ErrorMessage</p>
-</div>
+    <div @ref="fileDropContainer" class="file-drop-zone @HoverClass" @ondragenter="OnDragEnter"
+        @ondragleave="OnDragLeave" @ondragover="OnDragEnter">
+        <InputFile OnChange="@OnChange" multiple />
+    </div>
 
-<div>
-    <button type="submit" @onclick="AddGradeKeyAsync">
-        Calculate
-    </button>
-</div>
+    <div class="error-message-container">
+        <p>@ErrorMessage</p>
+    </div>
 
-<EditForm Model="@stringCode">
-    <InputTextArea @bind-Value="stringCode" readonly style="will-change: auto;"/>
+    <div>
+        <button type="submit" @onclick="AddGradeKeyAsync">
+            Calculate
+        </button>
+    </div>
+    
 </EditForm>
 
-@code 
+@code
 {
-    private string selectedClass = string.Empty;
-    private int selectedSubject = 1;
+    protected List<string> SelectedSchoolClasses = new List<string>();
     private string HoverClass = string.Empty;
     void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
     void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
@@ -56,12 +52,12 @@
     IJSObjectReference? _filePasteFunctionReference = default(IJSObjectReference);
     ElementReference fileDropContainer;
     IBrowserFile? file;
-    ScriptType scriptType; 
+    ScriptType scriptType;
     string stringCode = string.Empty;
     private string ErrorMessage = string.Empty;
     private const int maxAllowedFiles = 1;
     private int _userId = 1;
-
+    private GradeKeyPostDto gradeKeyPost = new();
     protected override async Task OnInitializedAsync()
     {
         try
@@ -69,38 +65,31 @@
             await GradeService.GetAllKindsAsync();
             await GradeService.GetSchoolclassesByTeacherAsync(_userId);
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
-            selectedClass = GradeService.Schooclasses.Select(s => s.Name).First();
         }
 
-        catch(Exception e)
+        catch (Exception e)
         {
             throw;
         }
     }
     private async Task AddGradeKeyAsync()
     {
-        if(stringCode == string.Empty)
+        if (stringCode == string.Empty)
         {
             ErrorMessage = "Script is needed!";
         }
-        
-        var kinds = GradeService.Kinds.Select(k => k.Name).ToList();
-        var schoolClasses = new List<string>{selectedClass};
-        await GradeService.CreateGradeKeyAsync(
-            new GradeKeyPostDto 
-            { 
-                Name = "test_lua", 
-                UsedKinds = kinds,
-                TeacherId = _userId, 
-                SubjectId = selectedSubject, 
-                ScriptType = scriptType, 
-                SchoolClasses = schoolClasses,
-                Calculation = stringCode 
-            });
-        var sc = GradeService.Schooclasses.SingleOrDefault(s => s.Name == selectedClass);
-        await GradeService.CalcGradesForClass(sc!.Id, _userId);
 
-        NavigationManager.NavigateTo($"/gradesForClass/{sc.Id}");
+        var kinds = GradeService.Kinds.Select(k => k.Name).ToList();
+        gradeKeyPost.Calculation = stringCode;
+        gradeKeyPost.SchoolClasses = SelectedSchoolClasses;
+        gradeKeyPost.ScriptType = scriptType;
+        gradeKeyPost.UsedKinds = kinds;
+        gradeKeyPost.TeacherId = _userId;
+        await GradeService.CreateGradeKeyAsync(gradeKeyPost);
+        //var sc = GradeService.Schooclasses.SingleOrDefault(s => s.Name == SelectedSchoolClasses.First());
+        //await GradeService.CalcGradesForClass(sc!.Id, _userId);
+
+        //NavigationManager.NavigateTo($"/gradesForClass/{sc.Id}");
     }
 
     public async ValueTask DisposeAsync()
@@ -117,14 +106,15 @@
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
-    {   
-        if(firstRender)
+    {
+        if (firstRender)
         {
             _filePasteModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/filePaste.js");
-            _filePasteFunctionReference = await _filePasteModule.InvokeAsync<IJSObjectReference>("initializeFilePaste", fileDropContainer, file);
+            _filePasteFunctionReference = await _filePasteModule.InvokeAsync<IJSObjectReference>("initializeFilePaste",
+            fileDropContainer, file);
         }
     }
-    
+
     async Task OnChange(InputFileChangeEventArgs e)
     {
         stringCode = string.Empty;
@@ -138,7 +128,7 @@
             return;
         }
 
-        
+
         foreach (var file in e.GetMultipleFiles())
         {
             var isAllowed = false;
@@ -148,7 +138,7 @@
             switch (info.Extension)
             {
                 case ".lua":
-                    scriptType = ScriptType.Lua; 
+                    scriptType = ScriptType.Lua;
                     isAllowed = true;
                     break;
                 case ".py":
@@ -173,7 +163,7 @@
                 stringCode = await fileContent.ReadAsStringAsync();
             }
         }
-    }    
+    }
 }
 
 

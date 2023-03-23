@@ -60,6 +60,11 @@ namespace Client.Data.Services
             return GradeKeys.SingleOrDefault(k => k.Id == id);
         }
 
+        public GradeKeyGetDto? GetGradeKeyByTeacherAndAndSubjectId(int teacherId, int subjectId)
+        {
+            return GradeKeys.SingleOrDefault(k => k.TeacherId == teacherId && k.SubjectId == subjectId);
+        }
+
         public async Task GetAllSchoolclassesAsync()
         {
             var schoolclasses = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>("http://grades_backend/api/SchoolClass/GetAll");
@@ -116,6 +121,11 @@ namespace Client.Data.Services
             var result = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>($"/schoolclassesByTeacher/{teacherId}");
 
             Schooclasses = result;
+        }
+
+        public GradeKeyGetDto? GetGradeKeyByTeacherId(int teacherId, int subjectId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

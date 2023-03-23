@@ -15,11 +15,12 @@ namespace Core.Logic
     /// </summary>
     public class ImportService
     {
-        private ApplicationDbContext DbContext { get; }
-        public ImportService(ApplicationDbContext context)
+        public ImportService(ApplicationDbContext dbContext) 
         {
-            DbContext = context;
+            this.DbContext = dbContext;
+               
         }
+        private ApplicationDbContext DbContext { get; }
 
         /// <summary>
         /// Generates Fake Schoolclasses including Students
@@ -37,11 +38,7 @@ namespace Core.Logic
             List<SchoolClass> schoolClasses = new List<SchoolClass>();
             for (int i = 1; i < 6; i++)
             {
-                SchoolClass schoolClass = new SchoolClass
-                {
-                    Name = $"{i}BHIF",
-                    SchoolLevel = i,
-                };
+                SchoolClass schoolClass = new SchoolClass { Name = $"{i}BHIF", SchoolLevel = i, };
                 schoolClasses.Add(schoolClass);
             }
 
@@ -49,7 +46,8 @@ namespace Core.Logic
             for (int i = 0; i < 10; i++)
             {
                 var studentFaker = new Faker<Student>()
-                .RuleFor(x => x.Name, x => x.Person.FullName).Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 firstStudents.Add(studentFaker);
             }
             schoolClasses.ElementAt(0).Students = firstStudents;
@@ -57,7 +55,8 @@ namespace Core.Logic
             for (int i = 0; i < 10; i++)
             {
                 var studentFaker = new Faker<Student>()
-                .RuleFor(x => x.Name, x => x.Person.FullName).Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 secondStudents.Add(studentFaker);
             }
             schoolClasses.ElementAt(1).Students = secondStudents;
@@ -65,7 +64,8 @@ namespace Core.Logic
             for (int i = 0; i < 10; i++)
             {
                 var studentFaker = new Faker<Student>()
-                .RuleFor(x => x.Name, x => x.Person.FullName).Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 thirdStudents.Add(studentFaker);
             }
             schoolClasses.ElementAt(2).Students = thirdStudents;
@@ -73,7 +73,8 @@ namespace Core.Logic
             for (int i = 0; i < 10; i++)
             {
                 var studentFaker = new Faker<Student>()
-                .RuleFor(x => x.Name, x => x.Person.FullName).Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 fourthStudents.Add(studentFaker);
             }
             schoolClasses.ElementAt(3).Students = fourthStudents;
@@ -81,7 +82,8 @@ namespace Core.Logic
             for (int i = 0; i < 10; i++)
             {
                 var studentFaker = new Faker<Student>()
-                .RuleFor(x => x.Name, x => x.Person.FullName).Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 fifthStudents.Add(studentFaker);
             }
             schoolClasses.ElementAt(4).Students = fifthStudents;
@@ -98,6 +100,7 @@ namespace Core.Logic
             await DbContext.SchoolClasses.AddRangeAsync(GenerateSchoolClasses());
             await DbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Import Teachers in Db
         /// </summary>
@@ -120,8 +123,8 @@ namespace Core.Logic
             for (int i = 0; i < 5; i++)
             {
                 var fakeTeacher = new Faker<Teacher>()
-                .RuleFor(x => x.Name, x => x.Person.FullName)
-                .Generate();
+                    .RuleFor(x => x.Name, x => x.Person.FullName)
+                    .Generate();
                 fakeTeacher.Subjects = await GetRandomSubjectsAsync(2);
                 fakeTeacher.SchoolClasses = await GetRandomSchoolclassAsync(4);
 
@@ -191,84 +194,100 @@ namespace Core.Logic
         {
             var allSubjects = new List<Subject>
             {
-                new Subject{Name = "Mathematik"},
-                new Subject{Name = "Deutsch" },
-                new Subject{Name = "English" },
-                new Subject{Name = "Programmieren"},
-                new Subject{Name = "Datenbanken"},
-                new Subject{Name = "Netzwerktechnik"},
-                new Subject{Name = "Religion"},
-                new Subject{Name = "Recht"},
-                new Subject{Name = "Sport"},
-                new Subject{Name = "Geschichte"}
+                new Subject { Name = "Mathematik" },
+                new Subject { Name = "Deutsch" },
+                new Subject { Name = "English" },
+                new Subject { Name = "Programmieren" },
+                new Subject { Name = "Datenbanken" },
+                new Subject { Name = "Netzwerktechnik" },
+                new Subject { Name = "Religion" },
+                new Subject { Name = "Recht" },
+                new Subject { Name = "Sport" },
+                new Subject { Name = "Geschichte" }
             };
 
             await DbContext.Subjects.AddRangeAsync(allSubjects);
 
             await DbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Import Grades to Students in db
         /// </summary>
         /// <returns></returns>
         public async Task ImportGradesToStudentsAsync()
         {
-            var schoolClasses = await DbContext.SchoolClasses.Include(s => s.Students).ToListAsync();
+            var schoolClasses = await DbContext.SchoolClasses
+                .Include(s => s.Students)
+                .ToListAsync();
             var subjects = await DbContext.Subjects.ToListAsync();
-            var teachers = await DbContext.Teachers.ToListAsync();
+            var teachers = await DbContext.Teachers.Include(t => t.Subjects).ToListAsync();
 
-            foreach (var schoolClass in schoolClasses)
+            foreach (var teacher in teachers)
             {
-                var ran = new Random();
-
-                var studentsFromClass = schoolClass.Students.ToList();
-                foreach (var student in studentsFromClass)
+                foreach (var subject in teacher.Subjects)
                 {
-                    for (int i = 0; i < 5; i++)
+                    foreach (var schoolClass in schoolClasses)
                     {
-                        Grade grade = new Grade
+                        var ran = new Random();
+
+                        var studentsFromClass = schoolClass.Students.ToList();
+                        foreach (var student in studentsFromClass)
                         {
-                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "MAK"),
-                            Student = student,
-                            Note = "Testdaten",
-                            Subject = subjects.ElementAt(i),
-                            Teacher = teachers.ElementAt(i),
-                            Graduate = ran.Next(1,5)
-                        };
-                        await DbContext.Grades.AddAsync(grade);
-                    }
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Grade grade = new Grade
-                        {
-                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "TEST"),
-                            Student = student,
-                            Note = "Testdaten",
-                            Subject = subjects.ElementAt(i),
-                            Teacher = teachers.ElementAt(i),
-                            Graduate = ran.Next(1,5)
-                        };
-                        await DbContext.Grades.AddAsync(grade);
-                    }
-                    
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Grade grade = new Grade
-                        {
-                            GradeKind = await DbContext.GradeKinds.SingleAsync(k => k.Name == "HOMEWORK"),
-                            Student = student,
-                            Note = "Testdaten",
-                            Subject = subjects.ElementAt(i),
-                            Teacher = teachers.ElementAt(i),
-                            Graduate = ran.Next(1,5)
-                        };
-                        await DbContext.Grades.AddAsync(grade);
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Grade grade = new Grade
+                                {
+                                    GradeKind = await DbContext.GradeKinds.SingleAsync(
+                                        k => k.Name == "MAK"
+                                    ),
+                                    Student = student,
+                                    Note = "Testdaten",
+                                    Subject = subject,
+                                    Teacher = teacher,
+                                    Graduate = ran.Next(1, 5)
+                                };
+                                await DbContext.Grades.AddAsync(grade);
+                            }
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Grade grade = new Grade
+                                {
+                                    GradeKind = await DbContext.GradeKinds.SingleAsync(
+                                        k => k.Name == "TEST"
+                                    ),
+                                    Student = student,
+                                    Note = "Testdaten",
+                                    Subject = subject,
+                                    Teacher = teacher,
+                                    Graduate = ran.Next(1, 5)
+                                };
+                                await DbContext.Grades.AddAsync(grade);
+                            }
+
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Grade grade = new Grade
+                                {
+                                    GradeKind = await DbContext.GradeKinds.SingleAsync(
+                                        k => k.Name == "HOMEWORK"
+                                    ),
+                                    Student = student,
+                                    Note = "Testdaten",
+                                    Subject = subject,
+                                    Teacher = teacher,
+                                    Graduate = ran.Next(1, 5)
+                                };
+                                await DbContext.Grades.AddAsync(grade);
+                            }
+                        }
                     }
                 }
             }
 
             await DbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Generate Different GradeKinds and import in Db
         /// </summary>
@@ -277,14 +296,14 @@ namespace Core.Logic
         {
             var gradeKinds = new GradeKind[]
             {
-                new (){Name = "YEAR"},
-                new (){Name = "MAK"},
-                new (){Name = "TEST"},
-                new (){Name = "HOMEWORK"}
+                new() { Name = "YEAR" },
+                new() { Name = "MAK" },
+                new() { Name = "TEST" },
+                new() { Name = "HOMEWORK" }
             };
 
             await DbContext.GradeKinds.AddRangeAsync(gradeKinds);
             await DbContext.SaveChangesAsync();
-        }       
+        }
     }
 }

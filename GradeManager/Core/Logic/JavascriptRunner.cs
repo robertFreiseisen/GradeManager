@@ -9,43 +9,36 @@ namespace Core.Logic
 {
     public class JavascriptRunner
     {
-        public Grade RunScript(GradeKey key, List<Grade> grades)
+        public static Grade RunScript(GradeKey key, List<Grade> grades)
         {
             if (key.Calculation == string.Empty || key.UsedKinds == null)
             {
                 return null;
             }
-            var engine = new Engine(options => options.DebugMode(true));
+            var engine = new Engine(cfg => cfg.AllowClr());
             Grade result = new Grade();
+            var logs = string.Empty;
 
             try
             {
-                //var jsObjects = gradeKinds.Select(o => new {
-                //    Name = o.Name
-                //}).ToArray();
+                engine
+                    .SetValue("log", new Action<object>(Console.WriteLine))
+                    .SetValue("gradeKinds", key.UsedKinds.ToArray())
+                     .SetValue("grades", grades.ToArray());
 
-                engine.SetValue("gradeKinds", key.UsedKinds.ToArray())
-                      .SetValue("grades", grades.ToArray());
-                      
-                var returnFromScript = engine
-                    .Execute(key.Calculation)
-                    .GetValue("result");
-
-                //engine.Invoke("debugger.start", 10);
+                engine.Execute(key.Calculation);
+                var resultGrade = engine.GetValue("result");
+                //logs = TypeConverter.ToString(engine.GetValue("log"));
 
                 result.Teacher = key.Teacher;
-                result.Graduate = TypeConverter.ToInt32(returnFromScript);
+                result.Graduate = TypeConverter.ToInt32(resultGrade);
             }
             catch (Exception)
             {
-                throw;
+                result.Teacher = null;
+                result.Graduate = 0;
             }
             return result;
-        }
-        void HandleDebugInformation(DebugInformation info)
-        {
-            // Handle debugging information.
-            //Console.WriteLine($"Line {info.Locals}, Column {info.Location.Start.Column}: {info.CurrentStatement}");
         }
     }
 }

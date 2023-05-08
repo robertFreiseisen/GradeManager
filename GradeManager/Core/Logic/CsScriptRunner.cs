@@ -1,12 +1,12 @@
 ﻿using CSScriptLib;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
+using CSScripting;
 
 namespace Core.Logic
 {
@@ -17,8 +17,16 @@ namespace Core.Logic
             var result = new Grade();
             try
             {
-                dynamic script = CSScript.Evaluator.LoadCode(key.Calculation);
-                int res = script.Calculate(1);
+                dynamic script = CSScript.Evaluator
+                    .ReferenceAssemblyOf(typeof(GradeKey))
+                    .ReferenceAssemblyOf(typeof(Grade))
+                    .CompileCode(key.Calculation)
+                    .CreateObject("*");
+
+                var res = script.Calculate(key, grades);
+                result.Teacher = key.Teacher;              
+                result.Graduate = Convert.ToInt32(res);
+
             }
             catch (Exception)
             {

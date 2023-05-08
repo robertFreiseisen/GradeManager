@@ -10,12 +10,21 @@ using System.Threading.Tasks;
 
 namespace Core.Logic
 {
-    public class CSharpSkriptRunner
+    public class CsScriptRunner
     {
         public static Grade RunScript(GradeKey key, List<Grade> grades)
         {
             var result = new Grade();
-            var res = CSScript.Evaluator.LoadCode(key.Calculation);
+            try
+            {
+                dynamic script = CSScript.Evaluator.LoadCode(key.Calculation);
+                int res = script.Calculate(1);
+            }
+            catch (Exception)
+            {
+                result.Teacher = null;
+                result.Graduate = 0;
+            }
 
             return result;
         }

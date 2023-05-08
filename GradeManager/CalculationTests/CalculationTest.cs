@@ -210,9 +210,9 @@ namespace CalculationTests
             var code = File.ReadAllText("test.cs");
             var key = new GradeKey { Name = "CsScriptTest", UsedKinds = gradeKinds, Calculation = code };
 
-            var result = CSharpSkriptRunner.RunScript(key, grades);
+            var result = CsScriptRunner.RunScript(key, grades);
             
-            Assert.AreEqual(3, result.Graduate, "Calculation is right");
+            Assert.AreEqual(1, result.Graduate, "Calculation is right");
         }
     }
 }

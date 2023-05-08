@@ -1,4 +1,5 @@
-static int Calculate()
+using System;
+int Calculate(int a)
 {
-    return 0;
+    return a;
 }

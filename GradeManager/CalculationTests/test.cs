@@ -1,6 +1,8 @@
 using Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 public class Script
 {
     public double Calculate(GradeKey key, List<Grade> grades)
@@ -31,6 +33,8 @@ public class Script
                 homeworkCounter++;
             }
         }
+
+        Debugger.Break();
         
         return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;
     }

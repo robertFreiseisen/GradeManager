@@ -32,9 +32,7 @@ public class Script
                 homework += item.Graduate;
                 homeworkCounter++;
             }
-        }
-
-        Debugger.Break();
+        }       
         
         return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;
     }

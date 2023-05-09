@@ -32,8 +32,10 @@ public class Script
                 homework += item.Graduate;
                 homeworkCounter++;
             }
-        }       
-        
+        }
+
+        Console.WriteLine("Hallo Welt");       
+
         return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;
     }
 }

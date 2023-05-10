@@ -235,5 +235,15 @@ namespace CalculationTests
 
             Assert.AreEqual(2, result.Graduate, "Calculation is right");
         }
+        [TestMethod]
+        public void CsScriptMicrosoft_T01()
+        {
+            var code = File.ReadAllText("testScript.txt");
+            var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
+
+            var result = CsScriptMicrosoftRunner.RunScriptAsync(key, grades);
+
+            Assert.AreEqual(3, result.Result.Graduate, "Calculation is right");
+        }
     }
 }

@@ -54,9 +54,8 @@ namespace Core.Logic
                 if (jsonOutput != null)
                 {
                     logs = JsonConvert.DeserializeObject<List<string>>(jsonOutput);
+                    DisplayOutput(logs);
                 }
-
-                DisplayOutput(logs);
 
                 // Get Return from Script
                 var resultGrade = engine.GetVariableValue("result");

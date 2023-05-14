@@ -25,6 +25,4 @@ foreach (var item in Grades)
     }
 }
 
-Console.WriteLine("Hallo Welt");
-
 double result = ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;

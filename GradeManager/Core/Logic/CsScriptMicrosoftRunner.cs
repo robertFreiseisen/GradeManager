@@ -18,10 +18,17 @@ namespace Core.Logic
             var globals = new Globals { GradeKey = key, Grades = grades };
             var state = await CSharpScript.RunAsync(key.Calculation, globals: globals);
 
+            double resultGrade = 0.0;
             foreach (var variable in state.Variables)
             {
-                Console.WriteLine($"{variable.Name} = {variable.Value} of type {variable.Type}");
+                if (variable.Name == "result")
+                {
+                    resultGrade = (double)variable.Value;
+                }
             }
+
+            result.Teacher = key.Teacher;
+            result.Graduate = Convert.ToInt32(resultGrade);
 
             return result;
         }

@@ -28,3 +28,4 @@ function calculate() {
     return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3;
 }
 var result = calculate();
+console.log('Hello');

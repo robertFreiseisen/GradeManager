@@ -37,7 +37,9 @@ namespace Core.Logic
                 .SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId);
 
             if(key == null)
-                return null;
+            {
+                throw new NullReferenceException("No Key found");
+            }
                 
             var result = new List<Grade>();
 

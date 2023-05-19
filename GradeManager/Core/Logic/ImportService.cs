@@ -134,7 +134,7 @@ namespace Core.Logic
             return teachers;
         }
 
-        private async Task<List<SchoolClass>?> GetRandomSchoolclassAsync(int quantity)
+        private async Task<List<SchoolClass>> GetRandomSchoolclassAsync(int quantity)
         {
             var scs = new List<SchoolClass>();
             var allSchoolclasses = await DbContext.SchoolClasses.ToArrayAsync();

@@ -24,7 +24,7 @@ namespace Core.Logic
         {
             if (key.Calculation == string.Empty || key.UsedKinds == null || grades == null)
             {
-                return null;
+                throw new NullReferenceException("Not enough information for Calculation");
             }
 
             var code = key.Calculation;
@@ -45,7 +45,6 @@ namespace Core.Logic
             }
             catch (Exception)
             {
-
                 throw;
             }
 

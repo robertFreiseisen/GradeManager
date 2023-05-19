@@ -12,10 +12,10 @@ namespace Shared.Entities
     public class Teacher : EntityObject
     {
         [Required]
-        public string Name { get; set; }
-        public List<GradeKey>? GradeKeys { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public List<GradeKey> GradeKeys { get; set; } = new();
 
-        public List<Subject> Subjects { get; set; }
-        public List<SchoolClass>? SchoolClasses { get; set; }
+        public List<Subject> Subjects { get; set; } = new();
+        public List<SchoolClass> SchoolClasses { get; set; } = new();
     }
 }

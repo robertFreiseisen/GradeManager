@@ -14,7 +14,6 @@ namespace Client.Services
         //Task CreateGradeAsync(Grade grade);
         //Task GetAllGradesAsync();
         GradeKeyGetDto? GetGradeKeyById(int? id);
-        GradeKeyGetDto? GetGradeKeyByTeacherId(int teacherId, int subjectId);
         Task GetAllSchoolclassesAsync();
         Task GetAllGradeKeysAsync();
         Task CreateGradeKeyAsync(GradeKeyPostDto key);

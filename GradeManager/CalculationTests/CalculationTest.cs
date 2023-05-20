@@ -238,7 +238,7 @@ namespace CalculationTests
         [TestMethod]
         public void CsScriptMicrosoft_T01()
         {
-            var code = File.ReadAllText("testScript.cs");
+            var code = File.ReadAllText("testScript.csc");
             var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
 
             var result = CsScriptMicrosoftRunner.RunScriptAsync(key, grades);
@@ -267,7 +267,7 @@ namespace CalculationTests
                 new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 5},
 
             };
-            var code = File.ReadAllText("testScript.cs");
+            var code = File.ReadAllText("testScript.csc");
             var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
 
             var result = CsScriptMicrosoftRunner.RunScriptAsync(key, secondGrades);

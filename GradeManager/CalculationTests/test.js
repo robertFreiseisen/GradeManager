@@ -1,5 +1,5 @@
-﻿var grades = JSON.parse(gradesList);
-var gradeKinds = JSON.parse(gradeKindsList);
+﻿var grades;
+var gradeKinds;
 
 function calculate() {
     let makCounter = 0;
@@ -27,5 +27,5 @@ function calculate() {
     }
     return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3;
 }
-var result = calculate();
-console.log('Wert: ' +grades[1].GradeKind.Name);
+const result = calculate();
+console.log(result + ' + Hello World!');

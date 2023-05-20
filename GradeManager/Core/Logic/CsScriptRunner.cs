@@ -30,7 +30,10 @@ namespace Core.Logic
                     .ReferenceAssemblyOf(typeof(Grade))
                     .CompileCode(key.Calculation)
                     .CreateObject("*");
-                
+
+                // Ausgabe des Skripts abrufen
+                //string output = sw.ToString();
+
                 var res = script.Calculate(key, grades);
                 result.Teacher = key.Teacher;              
                 result.Graduate = Convert.ToInt32(res);

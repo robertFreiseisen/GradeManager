@@ -235,5 +235,44 @@ namespace CalculationTests
 
             Assert.AreEqual(2, result.Graduate, "Calculation is right");
         }
+        [TestMethod]
+        public void CsScriptMicrosoft_T01()
+        {
+            var code = File.ReadAllText("testScript.csc");
+            var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
+
+            var result = CsScriptMicrosoftRunner.RunScriptAsync(key, grades);
+
+            Assert.AreEqual(3, result.Result.Graduate, "Calculation is right");
+        }
+        [TestMethod]
+        public void CsScriptMicrosoft_T02()
+        {
+            List<Grade> secondGrades = new List<Grade>
+            {
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 1 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 1 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 1 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 2 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name =="MAK") , Graduate = 1 },
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 1},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 2},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 3},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 4},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "TEST"), Graduate = 2},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 1},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 2},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 3},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 4},
+                new Grade { GradeKind = gradeKinds.Single(g => g.Name == "HOMEWORK"), Graduate = 5},
+
+            };
+            var code = File.ReadAllText("testScript.csc");
+            var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
+
+            var result = CsScriptMicrosoftRunner.RunScriptAsync(key, secondGrades);
+
+            Assert.AreEqual(2, result.Result.Graduate, "Calculation is right");
+        }
     }
 }

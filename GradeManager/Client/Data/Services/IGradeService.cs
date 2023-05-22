@@ -1,5 +1,4 @@
 ﻿using Shared.Dtos;
-using Shared.Entities;
 
 namespace Client.Services
 {

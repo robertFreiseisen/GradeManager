@@ -11,12 +11,19 @@ namespace Core.Logic
     public class GradeCalculator
     {
         private readonly ApplicationDbContext context;
+        private readonly JavascriptRunner jsRunner;
+        private readonly CsScriptMicrosoftRunner csScriptRunner;
         private readonly LuaScriptRunner luaScriptRunner;
 
-        public GradeCalculator(ApplicationDbContext context, LuaScriptRunner luaScriptRunner)
+        public GradeCalculator(ApplicationDbContext context, 
+                               LuaScriptRunner luaScriptRunner, 
+                               JavascriptRunner jsRunner,
+                               CsScriptMicrosoftRunner csRunner)
         {
             this.context = context;
             this.luaScriptRunner = luaScriptRunner;
+            this.csScriptRunner = csRunner;
+            this.jsRunner = jsRunner;
         }
 
         public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject)
@@ -47,7 +54,7 @@ namespace Core.Logic
             {
                 var student = context.Students.Single(s => s.Id == item);
                 var gradesForCalc =  grades.Where(g => g.StudentId == student.Id).ToList();
-                var gradeForStudent = this.RunScript(key, 
+                var gradeForStudent = await this.RunScriptAsync(key, 
                                                    gradesForCalc, 
                                                    student);
                 gradeForStudent.TeacherId = key.TeacherId;
@@ -61,7 +68,7 @@ namespace Core.Logic
         }
 
         /// Handels the script type
-        private Grade RunScript(GradeKey gradeKey, List<Grade> grades, Student student)
+        private async Task<Grade> RunScriptAsync(GradeKey gradeKey, List<Grade> grades, Student student)
         {
             var result = new Grade();
             result.Student = student;
@@ -75,8 +82,10 @@ namespace Core.Logic
                 case ScriptType.Python:
                     break;
                 case ScriptType.JavaScript:
+                    result = jsRunner.RunScript(gradeKey, grades);
                     break;
                 case ScriptType.CSharpScript:
+                    result = await csScriptRunner.RunScriptAsync(gradeKey, grades);
                     break;
                 default:
                     result = null;

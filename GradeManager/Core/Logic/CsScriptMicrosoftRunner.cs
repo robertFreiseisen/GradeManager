@@ -16,7 +16,7 @@ namespace Core.Logic
 {
     public class CsScriptMicrosoftRunner
     {
-        public static async Task<Grade> RunScriptAsync(GradeKey key, List<Grade> grades)
+        public async Task<Grade> RunScriptAsync(GradeKey key, List<Grade> grades)
         {
             var result = new Grade();
             var globals = new Globals { GradeKey = key, Grades = grades };

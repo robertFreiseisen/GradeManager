@@ -63,7 +63,7 @@ namespace CalculationTests
             var key = new GradeKey { Name = "JavascriptTest", UsedKinds = gradeKinds, Calculation = code };
 
             var runner = new JavascriptRunner();
-            var result = JavascriptRunner.RunScript(key, grades);
+            var result = runner.RunScript(key, grades);
 
             Assert.AreEqual(3, result.Graduate, "Calculation is right");
         }
@@ -94,7 +94,7 @@ namespace CalculationTests
             var key = new GradeKey { Name = "JavascriptTest", UsedKinds = gradeKinds, Calculation = code };
 
             var runner = new JavascriptRunner();
-            var result = JavascriptRunner.RunScript(key, secondGrades);
+            var result = runner.RunScript(key, secondGrades);
 
             Assert.AreEqual(2, result.Graduate, "Calculation is right");
         }
@@ -241,7 +241,8 @@ namespace CalculationTests
             var code = File.ReadAllText("testScript.csc");
             var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
 
-            var result = CsScriptMicrosoftRunner.RunScriptAsync(key, grades);
+            var runner = new CsScriptMicrosoftRunner();
+            var result = runner.RunScriptAsync(key, grades);
 
             Assert.AreEqual(3, result.Result.Graduate, "Calculation is right");
         }
@@ -269,8 +270,9 @@ namespace CalculationTests
             };
             var code = File.ReadAllText("testScript.csc");
             var key = new GradeKey { Name = "CsScriptMicrosoftTest", UsedKinds = gradeKinds, Calculation = code };
-
-            var result = CsScriptMicrosoftRunner.RunScriptAsync(key, secondGrades);
+            
+            var runner = new CsScriptMicrosoftRunner();
+            var result = runner.RunScriptAsync(key, secondGrades);
 
             Assert.AreEqual(2, result.Result.Graduate, "Calculation is right");
         }

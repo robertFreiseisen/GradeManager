@@ -1,21 +1,13 @@
 ﻿using JavaScriptEngineSwitcher.Jint;
-using Jint;
-using Jint.Native;
-using Jint.Native.Object;
-using Jint.Runtime;
-using Jint.Runtime.Interop;
-using Microsoft.CodeAnalysis.FlowAnalysis;
 using Newtonsoft.Json;
 using Shared.Entities;
 using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.ConstrainedExecution;
 
 namespace Core.Logic
 {
     public class JavascriptRunner
     {
-        public static Grade RunScript(GradeKey key, List<Grade> grades)
+        public Grade RunScript(GradeKey key, List<Grade> grades)
         {
             var engine = new JintJsEngine();
             Grade result = new Grade();
@@ -54,7 +46,11 @@ namespace Core.Logic
                 if (jsonOutput != null)
                 {
                     logs = JsonConvert.DeserializeObject<List<string>>(jsonOutput);
-                    DisplayOutput(logs);
+
+                    if (logs != null)
+                    {
+                        DisplayOutput(logs);   
+                    }
                 }
 
                 // Get Return from Script
@@ -71,7 +67,7 @@ namespace Core.Logic
             return result;
         }
 
-        private static void DisplayOutput(List<string>? logs)
+        private static void DisplayOutput(List<string> logs)
         {
             foreach (string output in logs)
             {

@@ -11,8 +11,8 @@ namespace Shared.Entities
     [Serializable]
     public class GradeKind : EntityObject
     {
-        public List<GradeKey> GradeKeys { get; set; } 
-        public string Name { get; set; }
+        public List<GradeKey> GradeKeys { get; set; } = new();
+        public string Name { get; set; } = string.Empty;
     }
 
     public class GradeKindComparer : IEqualityComparer<GradeKind>

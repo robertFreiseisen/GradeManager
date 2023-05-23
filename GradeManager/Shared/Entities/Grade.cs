@@ -40,6 +40,7 @@ namespace Shared.Entities
         [Required]
         public int GradeKindId { get; set; }
         [Required]
-        public GradeKind GradeKind { get; set; } // Test oder MAK, Hausuebung
+        public GradeKind GradeKind { get; set; } = new(); // Test oder MAK, Hausuebung
+       
     }
 }

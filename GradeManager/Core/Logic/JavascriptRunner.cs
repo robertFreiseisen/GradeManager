@@ -1,33 +1,78 @@
-﻿using Jint.Runtime;
+﻿using JavaScriptEngineSwitcher.Jint;
+using Newtonsoft.Json;
 using Shared.Entities;
+using System.Diagnostics;
 
 namespace Core.Logic
 {
     public class JavascriptRunner
     {
-        public Grade RunScript(GradeKey key)
+        public Grade RunScript(GradeKey key, List<Grade> grades)
         {
-            if (key.Calculation == string.Empty || key.UsedKinds == null)
-            {
-                return null;
-            }
-            var engine = new Jint.Engine();
+            var engine = new JintJsEngine();
             Grade result = new Grade();
+            List<string>? logs = new List<string>();
 
             try
             {
-                var returnFromScript = engine
-                    .Execute(key.Calculation)                    
-                    .GetValue("result");
+                // Definiere eine Variable im JavaScript-Code, um die console.log-Ausgaben zu speichern
+                engine.Execute("var consoleOutput = [];");
+
+                // Definiere die console.log-Funktion im JavaScript-Code
+                engine.Execute(@"
+                                var console = {
+                                    log: function() {
+                                        consoleOutput.push(Array.from(arguments).join(' '));
+                                    }
+                                };
+                            ");
+
+
+                var gradeKindsList = JsonConvert.SerializeObject(key.UsedKinds);
+                var gradesList = JsonConvert.SerializeObject(grades);
+
+                engine.SetVariableValue("gradeKindsList", gradeKindsList);
+                engine.SetVariableValue("gradesList", gradesList);
+
+                if (key.Calculation != null)
+                {
+                    engine.Execute(key.Calculation);
+                }
+
+                //Die Ausgabe der console.log-Anweisungen als JSON-String
+                string jsonOutput = engine.Evaluate<string>("JSON.stringify(consoleOutput)");
+
+                // Konvertiere den JSON-String in eine Liste von strings
+                if (jsonOutput != null)
+                {
+                    logs = JsonConvert.DeserializeObject<List<string>>(jsonOutput);
+
+                    if (logs != null)
+                    {
+                        DisplayOutput(logs);   
+                    }
+                }
+
+                // Get Return from Script
+                var resultGrade = engine.GetVariableValue("result");
 
                 result.Teacher = key.Teacher;
-                result.Graduate = TypeConverter.ToInt32(returnFromScript);
+                result.Graduate = Convert.ToInt32(resultGrade);
             }
             catch (Exception)
             {
-                throw;
+                result.Teacher = null;
+                result.Graduate = 0;
             }
             return result;
+        }
+
+        private static void DisplayOutput(List<string> logs)
+        {
+            foreach (string output in logs)
+            {
+                Debug.WriteLine(output);
+            }
         }
     }
 }

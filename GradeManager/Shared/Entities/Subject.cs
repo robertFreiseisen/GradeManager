@@ -7,6 +7,6 @@ namespace Shared.Entities
     [Serializable()]
     public class Subject : EntityObject
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

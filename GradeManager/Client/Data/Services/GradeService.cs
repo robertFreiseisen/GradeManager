@@ -108,24 +108,20 @@ namespace Client.Data.Services
                 return result!;
             }
 
-            catch(Exception e){
-
+            catch(Exception)
+            {
+                throw;
             }
-            return null;
-
- 
         }
 
         public async Task GetSchoolclassesByTeacherAsync(int teacherId)
         {
             var result = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>($"/schoolclassesByTeacher/{teacherId}");
 
-            Schooclasses = result;
-        }
-
-        public GradeKeyGetDto? GetGradeKeyByTeacherId(int teacherId, int subjectId)
-        {
-            throw new NotImplementedException();
+            if(result != null)
+            {
+                Schooclasses = result;
+            }
         }
     }
 }

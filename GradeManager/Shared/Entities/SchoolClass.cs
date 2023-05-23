@@ -10,10 +10,10 @@ namespace Shared.Entities
     [Serializable()]
     public class SchoolClass : EntityObject 
     {
-        public string Name { get; set; }
-        public List<Student> Students { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public List<Student> Students { get; set; } = new();
         public int SchoolLevel { get; set; }
-        public List<Teacher> Teachers { get; set; }
+        public List<Teacher> Teachers { get; set; } = new();
         public DateTime SchoolYear { get; set; }
     }
 

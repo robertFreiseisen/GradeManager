@@ -25,4 +25,4 @@ foreach (var item in Grades)
     }
 }
 
-double result = ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;
+return ((mak / makCounter) + (test / testCounter) + (homework / homeworkCounter)) / 3.0;

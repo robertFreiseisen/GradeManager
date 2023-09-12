@@ -33,7 +33,7 @@ namespace Core.Logic
             List<SchoolClass> schoolClasses = new List<SchoolClass>();
             for (int i = 1; i < 6; i++)
             {
-                SchoolClass schoolClass = new SchoolClass { Name = $"{i}BHIF", SchoolLevel = i, };
+                SchoolClass schoolClass = new SchoolClass { Name = $"{i}BHIF", SchoolLevel = i, SchoolYear="2022/23"};
                 schoolClasses.Add(schoolClass);
             }
 
@@ -124,6 +124,7 @@ namespace Core.Logic
                 fakeTeacher.SchoolClasses = await GetRandomSchoolclassAsync(4);
 
                 teachers.Add(fakeTeacher);
+                await DbContext.SaveChangesAsync();
             }
 
             return teachers;
@@ -135,7 +136,6 @@ namespace Core.Logic
             var allSchoolclasses = await DbContext.SchoolClasses.ToArrayAsync();
             for (int i = 0; i < quantity; i++)
             {
-                //var rand = new Random();
                 var ran = allSchoolclasses[Random.Shared.Next(0, allSchoolclasses.Length - 1)];
                 var contains = scs.Find(s => s.Name == ran.Name);
                 if (contains == null)
@@ -163,14 +163,11 @@ namespace Core.Logic
             var allSubjects = await DbContext.Subjects.ToArrayAsync();
             for (int i = 0; i < quantity; i++)
             {
-                //var rand = new Random();
-                var randomSubject = allSubjects[Random.Shared.Next(0, allSubjects.Length)].Name;
-                var contains = subjects.Find(s => s.Name == randomSubject);
-                if (contains == null)
+                var randomSubject = allSubjects[Random.Shared.Next(0, allSubjects.Length)];
+                var contains = subjects.Find(s => s.Name == randomSubject.Name);
+                if (!subjects.Contains(randomSubject))
                 {
-                    Subject subject = new Subject();
-                    subject.Name = randomSubject;
-                    subjects.Add(subject);
+                    subjects.Add(randomSubject);                                    
                 }
                 else
                 {

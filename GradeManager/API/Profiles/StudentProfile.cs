@@ -4,6 +4,9 @@ using Shared.Entities;
 
 namespace API.Profiles
 {
+    /// <summary>
+    /// Definiton of Mapping for StudentDTOs
+    /// </summary>
     public class StudentProfile : Profile
     {
         public StudentProfile()

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Entities\ClassDiagram1.cd" />
+  </ItemGroup>
+
 </Project>

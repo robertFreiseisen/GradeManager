@@ -2,7 +2,6 @@
 
 namespace Shared.Entities
 {
-    [Serializable()]
     public class Teacher : EntityObject
     {
         [Required]

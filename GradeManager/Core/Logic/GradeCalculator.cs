@@ -15,15 +15,19 @@ namespace Core.Logic
         private readonly CsScriptMicrosoftRunner csScriptRunner;
         private readonly LuaScriptRunner luaScriptRunner;
 
+        private readonly PythonScriptRunner pythonScriptRunner;
+
         public GradeCalculator(ApplicationDbContext context, 
                                LuaScriptRunner luaScriptRunner, 
                                JavascriptRunner jsRunner,
+                               PythonScriptRunner pythonScriptRunner,
                                CsScriptMicrosoftRunner csRunner)
         {
             this.context = context;
             this.luaScriptRunner = luaScriptRunner;
             this.csScriptRunner = csRunner;
             this.jsRunner = jsRunner;
+            this.pythonScriptRunner = pythonScriptRunner;
         }
 
         public async Task<List<Grade>> CalculateKeysForClassAndSubject(int schoolClassId, int subject)
@@ -39,9 +43,11 @@ namespace Core.Logic
                 return new List<Grade>();
             }
 
+            var schoolClass = await context.SchoolClasses.SingleAsync(sc => sc.Id == schoolClassId);
+
             var g1 = grades.First();
             var key = await context.GradeKeys
-                .SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId);
+                .SingleOrDefaultAsync(k => k.SubjectId == subject && k.TeacherId == g1.TeacherId && k.SchoolClasses.Contains(schoolClass));
 
             if(key == null)
             {
@@ -80,6 +86,7 @@ namespace Core.Logic
                     result = luaScriptRunner.RunScript(gradeKey, grades);
                     break;
                 case ScriptType.Python:
+                    result = pythonScriptRunner.RunScript(gradeKey, grades);
                     break;
                 case ScriptType.JavaScript:
                     result = jsRunner.RunScript(gradeKey, grades);

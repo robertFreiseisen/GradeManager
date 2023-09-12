@@ -100,12 +100,14 @@ namespace Client.Data.Services
             Grades.AddRange(result!);
         }
 
-        public async Task<List<GradeGetDto>> GetGradesForClass(int schoolClassId)
+        public async Task GetGradesForClass(int schoolClassId)
         {
             try
             {
-                var result = await _http.GetFromJsonAsync<List<GradeGetDto>>($"/gradesForClass/{schoolClassId}");           
-                return result!;
+                Grades = (await _http.GetFromJsonAsync<List<GradeGetDto>>($"/gradesForClass/{schoolClassId}"))!
+                .Where(g => g.GradeKind == string.Empty)
+                .Select(g => g)
+                .ToList();           
             }
 
             catch(Exception)
@@ -114,9 +116,9 @@ namespace Client.Data.Services
             }
         }
 
-        public async Task GetSchoolclassesByTeacherAsync(int teacherId)
+        public async Task GetSchoolclassesByTeacherAndSubjectAsync(int teacherId, int subjectId)
         {
-            var result = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>($"/schoolclassesByTeacher/{teacherId}");
+            var result = await _http.GetFromJsonAsync<List<SchoolClassGetDto>>($"/schoolclassesByTeacherAndSubject/{teacherId}/{subjectId}");
 
             if(result != null)
             {

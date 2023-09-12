@@ -11,7 +11,7 @@ namespace Shared.Dtos
         public string Name { get; set; } = string.Empty;
         public List<string> Stutends { get; set; } = new List<string>();
         public int SchoolLevel { get; set; }
-        public DateTime SchoolYear { get; set; }
+        public string SchoolYear { get; set; } = string.Empty;
     }
     
     public class SchoolClassPostDto

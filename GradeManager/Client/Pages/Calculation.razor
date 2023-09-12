@@ -68,8 +68,8 @@
     {
         try
         {
-            await GradeService.GetSchoolclassesByTeacherAsync(_userId);
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
+            await GradeService.GetSchoolclassesByTeacherAndSubjectAsync(_userId, SubjectService.Subjects.First().Id);
             await GradeService.GetAllGradeKeysAsync();
         }
 

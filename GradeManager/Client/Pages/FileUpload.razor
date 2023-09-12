@@ -62,9 +62,10 @@
     {
         try
         {
-            await GradeService.GetAllKindsAsync();
-            await GradeService.GetSchoolclassesByTeacherAsync(_userId);
             await SubjectService.GetSubjectsByTeacherAsync(_userId);
+            await GradeService.GetSchoolclassesByTeacherAndSubjectAsync(_userId, SubjectService.Subjects.First().Id);
+            await GradeService.GetAllKindsAsync();
+            gradeKeyPost.SubjectId = SubjectService.Subjects.First().Id;
         }
 
         catch (Exception)
@@ -78,6 +79,7 @@
         {
             ErrorMessage = "Script is needed!";
         }
+        var sc = GradeService.Schooclasses.SingleOrDefault(s => s.Name == SelectedSchoolClasses.First());
 
         var kinds = GradeService.Kinds.Select(k => k.Name).ToList();
         gradeKeyPost.Calculation = stringCode;
@@ -85,11 +87,12 @@
         gradeKeyPost.ScriptType = scriptType;
         gradeKeyPost.UsedKinds = kinds;
         gradeKeyPost.TeacherId = _userId;
+        
         await GradeService.CreateGradeKeyAsync(gradeKeyPost);
-        //var sc = GradeService.Schooclasses.SingleOrDefault(s => s.Name == SelectedSchoolClasses.First());
+
         //await GradeService.CalcGradesForClass(sc!.Id, _userId);
 
-        //NavigationManager.NavigateTo($"/gradesForClass/{sc.Id}");
+        NavigationManager.NavigateTo($"/calculation");
     }
 
     public async ValueTask DisposeAsync()

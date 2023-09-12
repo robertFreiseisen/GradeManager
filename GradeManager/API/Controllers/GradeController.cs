@@ -4,6 +4,8 @@ using Core.ExtensionMethods;
 using Core.Logic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Scripting.Utils;
 using Persistence;
 using Shared.Dtos;
 using Shared.Entities;
@@ -66,8 +68,10 @@ namespace API.Controllers
             return Ok(result);
         }
         
-
-
+        private bool IsStudentInSchoolClass(SchoolClass sc, int studentId)
+        {
+            return sc.Students.Any(s => s.Id == studentId);
+        }
         
         [HttpGet("/calcForClass")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -80,20 +84,27 @@ namespace API.Controllers
         /// <returns></returns>
         public async Task<ActionResult<IEnumerable<GradeGetDto>>> CalculateGradesForClassAsync(int schoolClassId, int subjectId)
         {
+            var dbSchoolClass = await DbContext.SchoolClasses.SingleOrDefaultAsync(sc => sc.Id == schoolClassId);
+
+            if(dbSchoolClass == null)
+            {
+                return BadRequest("SchoolClass not found!");
+            }
+
             var dbGrades = await DbContext.Grades
-                .Include(g => g.Student)
-                .Where(g => g.Student!.SchoolClassId == schoolClassId && g.SubjectId == subjectId)
+                .Where(g => g.SubjectId == subjectId)
                 .ToListAsync();
 
-            if (dbGrades == null)
+            if (dbGrades.IsNullOrEmpty())
             {
                 return BadRequest("No Grades found!");
             }
 
-            var keyForClassExists = DbContext.GradeKeys
-                .Any(g => 
-                        g.SchoolClasses!.Any(s => s.Id == schoolClassId) &&
-                        g.SubjectId == subjectId);
+            var keys = await DbContext.GradeKeys.Include(gk => gk.SchoolClasses).Select(gk => gk).ToListAsync();
+                
+                
+            var keyForClassExists = keys
+            .Any(g => g.SubjectId == subjectId && g.SchoolClasses.Contains(dbSchoolClass));
 
             if (!keyForClassExists)
             {
@@ -117,7 +128,7 @@ namespace API.Controllers
                  return BadRequest(ex);
             }
 
-            var ret = result.Select(g => _mapper.Map<GradeGetDto>(g)).ToList();
+            var ret = result.Select(g => _mapper.Map<GradeGetDto>(g)).OrderBy(g => g.Id).ToList();
             return Ok(ret);
         }
 
@@ -196,11 +207,19 @@ namespace API.Controllers
                 return BadRequest("PostDto required!");
             }
             var gradeKeyToAddDb = _mapper.Map<GradeKey>(gradeKeyPostDto); 
+
+            var subject = await DbContext.Subjects.SingleOrDefaultAsync(s => s.Id == gradeKeyPostDto.SubjectId);
+
+            if (subject == default(Subject))
+            {
+                return BadRequest("Subject does not exist!");
+            }
+
+            gradeKeyToAddDb.Subject = subject;
             var kinds = gradeKeyToAddDb.UsedKinds.ToList();        
             var dbKinds = await DbContext.GradeKinds.ToListAsync();
             //var kindsExistsName = dbKinds.Select(k => k.Name).Intersect(gradeKeyPostDto.UsedKinds).ToList();
             //var kindsToAdd = kinds.Where(k => !kindsExistsName.Any(e => e == k.Name)).ToList();
-
 
             gradeKeyToAddDb.UsedKinds = kinds;
 

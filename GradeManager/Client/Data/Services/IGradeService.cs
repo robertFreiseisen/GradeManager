@@ -18,8 +18,8 @@ namespace Client.Services
         Task CreateGradeKeyAsync(GradeKeyPostDto key);
         Task DeleteGradeKeyAsync(int keyId);
         Task CalcGradesForClass(int schoolClassId, int subjectId);
-        Task<List<GradeGetDto>> GetGradesForClass(int schoolClassId);
-        Task GetSchoolclassesByTeacherAsync(int teacherId);
+        Task GetGradesForClass(int schoolClassId);
+        Task GetSchoolclassesByTeacherAndSubjectAsync(int teacherId, int subjectId);
         //Task UpdateGradeAsync(int gradeId);
         //Task DeleteGradeAsync(int gradeId);
     }

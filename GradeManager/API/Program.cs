@@ -17,6 +17,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<LuaScriptRunner>();
 builder.Services.AddTransient<CsScriptMicrosoftRunner>();
 builder.Services.AddTransient<JavascriptRunner>();
+builder.Services.AddTransient<PythonScriptRunner>();
 builder.Services.AddControllers().AddJsonOptions(x =>
 {
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; 
@@ -61,15 +62,6 @@ await import!.ImportGradesToStudentsAsync();
 
 await context.SaveChangesAsync();
 
-
-
-
-
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-
-//}
 app.UseSwagger();
 app.UseSwaggerUI();
 

@@ -22,7 +22,7 @@ namespace API.Controllers
             _mapper = mapper;
             Config = config;
         }
-        
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SchoolClassGetDto>>> GetAll()
@@ -34,15 +34,27 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("/schoolclassesByTeacher/{teacherId}")]
+        [HttpGet("/schoolclassesByTeacherAndSubject/{teacherId}/{subjectId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SchoolClassGetDto>>> GetByTeacherAsync(int teacherId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<SchoolClassGetDto>>> GetByTeacherAndSubjectAsync(int teacherId, int subjectId)
         {
-            var teacher = await DbContext.Teachers.Include(t => t.SchoolClasses).SingleOrDefaultAsync(t => t.Id == teacherId);
+            var teacher = await DbContext.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
 
-            var ret = teacher!.SchoolClasses!.Select(sc => _mapper.Map<SchoolClassGetDto>(sc)).ToList();
+            if (teacher == null)
+            {
+                return NotFound("Teacher does not exist!");
+            }
+            var grades = await DbContext.Grades.Include(g => g.Student).ToListAsync();
             
-            return Ok(ret);
+
+            var schoolClassesIds =  grades
+            .Where(g => g.SubjectId == subjectId && g.TeacherId == teacherId).Select(g => g.Student!.SchoolClassId).ToList();
+
+            var schoolClasses = await DbContext.SchoolClasses.Where(sc => schoolClassesIds.Any(c => c == sc.Id)).ToListAsync();
+
+            var result = schoolClasses.Select(sc => _mapper.Map<SchoolClassGetDto>(sc)).OrderBy(sc => sc.Name).ToList();
+            return Ok(result);
         }
     }
 }

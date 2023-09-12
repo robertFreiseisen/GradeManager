@@ -14,7 +14,7 @@ namespace Shared.Entities
         public List<Student> Students { get; set; } = new();
         public int SchoolLevel { get; set; }
         public List<Teacher> Teachers { get; set; } = new();
-        public DateTime SchoolYear { get; set; }
+        public string SchoolYear { get; set; } = "2022/23";
     }
 
     public class SchoolClassComparer : IEqualityComparer<SchoolClass>
